@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ naslov }}</title>
+
+    <style>
+body {
+    font-family: 'Arial';
+    font-size: 10pt;
+    margin: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 2em;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 6px 8px;
+    text-align: center; /* <-- To centrira vse */
+    vertical-align: middle;
+}
+
+th {
+    background-color: #aad18a;
+}
+
+    </style>
+</head>
+<body>
+        {% for ime_skupine, tabela in skupine %}
+            <table>
+                <thead>
+                  <!-- Vrstica z imenom skupine -->
+                  <tr>
+                    <th colspan="3" style="text-align: left; font-weight: bold; font-size: 1.1em;">
+                      {{ ime_skupine }}
+                    </th>
+                    {% for celica in tabela[0][3:] %}
+                      <th colspan="2" style="text-align: center;">{{ celica | safe }}</th>
+                    {% endfor %}
+                  </tr>
+
+                  <!-- Vrstica z 'krogi' in 'točke' -->
+                  <tr>
+                    <th>Mesto</th>
+                    <th>Tekmovalec</th>
+                    <th>Klub</th>
+                    {% for celica in tabela[0][3:] %}
+                      <th>Krogi</th>
+                      <th>Točke</th>
+                    {% endfor %}
+                  </tr>
+                </thead>
+                <tbody>
+  {% for vrstica in tabela[1:] %}
+    <tr>
+      <td>{{ vrstica[0] }}</td>
+      <td>{{ vrstica[1] }}</td>
+      <td>{{ vrstica[2] }}</td>
+      {% for vrednost in vrstica[3:] %}
+        {% if '/' in vrednost %}
+          {% set krogi, tocke = vrednost.split('/', 1) %}
+          <td>
+            {% if tocke.strip() == '0' %}
+              <s>{{ krogi }}</s>
+            {% else %}
+              {{ krogi }}
+            {% endif %}
+          </td>
+          <td style="color: red;">{{ tocke }}</td>
+        {% else %}
+          <td></td>
+          <td></td>
+        {% endif %}
+      {% endfor %}
+    </tr>
+  {% endfor %}
+</tbody>
+            </table>
+        {% endfor %}
+</body>
+</html>

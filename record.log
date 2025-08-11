@@ -1,0 +1,47 @@
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8888
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 140-624-983
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/22064/IC.php HTTP/1.1" 200 7744
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/22787/IC.php HTTP/1.1" 200 8017
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/23259/IC.php HTTP/1.1" 200 8536
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/23136/IC.php HTTP/1.1" 200 10507
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/22406/IC.php HTTP/1.1" 200 10952
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/23546/IC.php HTTP/1.1" 200 9056
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/22168/IC.php HTTP/1.1" 200 10062
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/23865/IC.php HTTP/1.1" 200 9698
+INFO:werkzeug:127.0.0.1 - - [11/Aug/2025 12:14:24] "POST / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Aug/2025 12:14:24] "POST / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Aug/2025 12:14:24] "GET /static/favicon.ico HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Aug/2025 12:14:27] "POST / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Aug/2025 12:14:27] "POST / HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/22064/IC.php HTTP/1.1" 200 7744
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/22787/IC.php HTTP/1.1" 200 8017
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/23259/IC.php HTTP/1.1" 200 8536
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/23136/IC.php HTTP/1.1" 200 10507
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/22406/IC.php HTTP/1.1" 200 10952
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/23546/IC.php HTTP/1.1" 200 9056
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/22168/IC.php HTTP/1.1" 200 10062
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ianseo.net:443
+DEBUG:urllib3.connectionpool:https://www.ianseo.net:443 "GET /TourData/2025/23865/IC.php HTTP/1.1" 200 9698
+INFO:werkzeug:127.0.0.1 - - [11/Aug/2025 12:14:31] "POST / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Aug/2025 12:14:31] "POST / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Aug/2025 12:14:31] "GET /static/favicon.ico HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [11/Aug/2025 12:14:34] "GET /pdf_posamezno?izbran_tab=AH HTTP/1.1" 200 -

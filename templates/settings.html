@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nastavitve</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon" />
+  <style>
+  .tabs {
+    display: flex;
+    margin-bottom: 1em;
+    border-bottom: 2px solid #ccc;
+  }
+
+  .tab-button {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    margin-right: 4px;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    border-bottom: none;
+  }
+
+  .tab-button.active {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+    border-bottom: 2px solid white;
+  }
+
+  .tab-vsebina {
+    display: none;
+  }
+
+  .tab-vsebina.active {
+    display: block;
+  }
+</style>
+</head>
+<body>
+<div class="tabs">
+  <button class="tab-button active" onclick="pokaziTab('kategorije-tab', this)">📋 Kategorije</button>
+  <button class="tab-button" onclick="pokaziTab('normalizacija-tab', this)">🏹 Normalizacija klubov</button>
+  <button class="tab-button" onclick="pokaziTab('normalizacija-tekmovalcev-tab', this)">🏹 Šlamparija tekmovalcev</button>
+  <button class="tab-button" onclick="pokaziTab('min-rezultati-tab', this)">🎯 Minimalni rezultati</button>
+</div>
+
+<div id="kategorije-tab" class="tab-vsebina active">
+  <h2>Kategorija / Stil</h2>
+  <form method="POST" action="{{ url_for('shrani_izlocene_kategorije') }}">
+<table border="1" style="border-collapse: collapse; width: 100%;">
+  <thead>
+    <tr>
+      {% for stil in kategorije.keys() %}
+        <th>
+          {{ stil }}
+          <br>
+          <input type="checkbox"
+                 onchange="toggleStil('{{ stil }}', this.checked)"
+                 checked>
+        </th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in range(kol_vrstic) %}
+    <tr>
+      {% for stil, seznami in kategorije.items() %}
+        <td>
+          {% set kategorija = seznami[i] %}
+          {% if kategorija %}
+            <label>
+              <input type="checkbox"
+                     class="stil-{{ stil|replace(' ', '_') }}"
+                     name="excluded"
+                     onchange="posodobiHeaderCheckboxe()"
+                     value="{{ stil }}::{{ kategorija }}"
+                     {% if (stil ~ '::' ~ kategorija) not in izloceni %}checked{% endif %}>
+              {{ kategorija }}
+            </label>
+          {% endif %}
+        </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+  <br>
+  <button type="submit" class="button">💾 Shrani</button>
+</form>
+</div>
+
+<div id="normalizacija-tab" class="tab-vsebina">
+  <h2>Normalizacija klubov</h2>
+  <table border="1" style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>Stara oznaka</th>
+        <th>Pravilno ime</th>
+        {% if session.role == 'admin' %}
+        <th></th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for oznaka, pravilno in normalizacija_klubov %}
+      <tr>
+        <td>{{ oznaka }}</td>
+        <td>{{ pravilno }}</td>
+        {% if session.role == 'admin' %}
+        <td style="text-align: center;">
+          <button type="button" onclick="odpriUrediFormo('{{ oznaka }}', '{{ pravilno }}')">✏️</button>
+          <form method="POST" action="{{ url_for('shrani_normalizacijo_klubov') }}" style="display: inline;">
+            <input type="hidden" name="delete" value="{{ oznaka }}">
+            <button type="submit"
+                    onclick="return confirm('Ali si prepričan, da želiš izbrisati {{ oznaka }}?')"
+                    style="background-color: transparent; color: black; font-size: 0.9em; border: none; cursor: pointer;"
+                    title="Izbriši">🗑️</button>
+          </form>
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <br>
+  <div id="urediForm" style="display:none; border: 1px solid #ccc; padding: 1em; margin-top: 1em;">
+    <h3>Uredi klub</h3>
+    <form method="POST" action="{{ url_for('shrani_normalizacijo_klubov') }}">
+      <input type="hidden" name="oznaka_stara" id="oznaka_stara">
+      <label>Stara oznaka:</label><br>
+      <input type="text" name="oznaka" id="oznaka_edit" required><br><br>
+      <label>Pravilno ime:</label><br>
+      <input type="text" name="pravilno" id="pravilno_edit" required><br><br>
+      <button type="submit" name="uredi_klub">💾 Shrani spremembe</button>
+      <button type="button" onclick="zapriUrediFormo()">✖️ Prekliči</button>
+    </form>
+  </div>
+  {% if session.role == 'admin' %}
+  <button type="button" id="dodajNovKlub" onclick="odpriDodajFormo()">➕ Dodaj nov klub</button>
+  {% endif %}
+</div>
+
+<div id="normalizacija-tekmovalcev-tab" class="tab-vsebina">
+  <h2>Popravki zaradi nepismenosti tekmovalcev</h2>
+  <p>Zanimivo, da ljudje niti ne vedo kako jim je ime, naprimer ali je Manenica Mate Bojan ali Manenica Bojan Mate. 😊 Recimo da šumnike še nekako oprostimo.</p>
+  <table border="1" style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>Šlampasto ime</th>
+        <th>Pravilno ime</th>
+        {% if session.role == 'admin' %}
+        <th></th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for staro_ime, pravilno in normalizacija_tekmovalcev %}
+      <tr>
+        <td>{{ staro_ime }}</td>
+        <td>{{ pravilno }}</td>
+        {% if session.role == 'admin' %}
+        <td style="text-align: center;">
+          <button type="button" onclick="odpriUrediFormoTekmovalca('{{ staro_ime }}', '{{ pravilno }}')">✏️</button>
+          <form method="POST" action="{{ url_for('shrani_normalizacijo_tekmovalcev') }}" style="display: inline;">
+            <input type="hidden" name="delete" value="{{ staro_ime }}">
+            <button type="submit"
+                    onclick="return confirm('Ali si prepričan, da želiš izbrisati {{ staro_ime }}?')"
+                    style="background-color: transparent; color: black; font-size: 0.9em; border: none; cursor: pointer;"
+                    title="Izbriši">🗑️</button>
+          </form>
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <br>
+
+  <div id="urediFormTekmovalca" style="display:none; border: 1px solid #ccc; padding: 1em; margin-top: 1em;">
+    <h3>Uredi tekmovalca</h3>
+    <form method="POST" action="{{ url_for('shrani_normalizacijo_tekmovalcev') }}">
+      <input type="hidden" name="oznaka_stara" id="ime_staro">
+      <label>Staro ime:</label><br>
+      <input type="text" name="oznaka" id="ime_edit" required><br><br>
+      <label>Pravilno ime:</label><br>
+      <input type="text" name="pravilno" id="pravilno_tekmovalec_edit" required><br><br>
+      <button type="submit" name="uredi_tekmovalca">💾 Shrani spremembe</button>
+      <button type="button" onclick="zapriUrediFormoTekmovalca()">✖️ Prekliči</button>
+    </form>
+  </div>
+
+  {% if session.role == 'admin' %}
+  <button type="button" id="dodajNovegaTekmovalca" onclick="odpriDodajFormoTekmovalca()">➕ Dodaj novega tekmovalca</button>
+  {% endif %}
+</div>
+
+
+
+<div id="min-rezultati-tab" class="tab-vsebina">
+  <h3>Minimalni rezultati za točke:</h3>
+  <ul>
+    {% for slog, prag in min_rezultat.items() %}
+      <li>{{ slog }}: {{ prag }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<p><a href="{{ url_for('index') }}" style="display:inline-block; padding:0.5em 1em; background:#007bff; color:white; text-decoration:none; border-radius:4px;">← Nazaj</a></p>
+<script>
+  function toggleStil(stil, checked) {
+    const className = "stil-" + stil.replaceAll(" ", "_");
+    const checkboxes = document.querySelectorAll("." + className);
+    checkboxes.forEach(cb => cb.checked = checked);
+  }
+
+  function posodobiHeaderCheckboxe() {
+    const tabela = document.querySelector("table");
+    const headerCheckboxes = tabela.querySelectorAll("thead input[type='checkbox']");
+
+    headerCheckboxes.forEach((headerCheckbox, colIndex) => {
+      const checkboxes = Array.from(tabela.querySelectorAll(`tbody tr td:nth-child(${colIndex + 1}) input[type='checkbox']`));
+      const vsajEnaObkljukana = checkboxes.some(cb => cb.checked);
+      headerCheckbox.checked = vsajEnaObkljukana;
+    });
+  }
+
+  function pokaziTab(id, button) {
+    document.querySelectorAll('.tab-vsebina').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    if (button) {
+      button.classList.add('active');
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    pokaziTab('kategorije-tab', document.querySelector('.tab-button.active'));
+    posodobiHeaderCheckboxe();
+  });
+
+  function odpriUrediFormo(oznaka, pravilno) {
+    document.getElementById("urediForm").style.display = "block";
+    document.getElementById("oznaka_stara").value = oznaka;
+    document.getElementById("oznaka_edit").value = oznaka;
+    document.getElementById("pravilno_edit").value = pravilno;
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+  }
+
+  function zapriUrediFormo() {
+    document.getElementById("urediForm").style.display = "none";
+    document.getElementById("dodajNovKlub").style.display = "inline-block";
+  }
+
+  function odpriDodajFormo() {
+    document.getElementById("urediForm").style.display = "block";
+    document.getElementById("oznaka_stara").value = "";
+    document.getElementById("oznaka_edit").value = "";
+    document.getElementById("pravilno_edit").value = "";
+    document.getElementById("dodajNovKlub").style.display = "none";
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+  }
+
+  function odpriUrediFormoTekmovalca(ime, pravilno) {
+  document.getElementById('urediFormTekmovalca').style.display = 'block';
+  document.getElementById('ime_staro').value = ime;
+  document.getElementById('ime_edit').value = ime;
+  document.getElementById('pravilno_tekmovalec_edit').value = pravilno;
+}
+
+function zapriUrediFormoTekmovalca() {
+  document.getElementById('urediFormTekmovalca').style.display = 'none';
+}
+
+function odpriDodajFormoTekmovalca() {
+  odpriUrediFormoTekmovalca('', '');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ naslov }}</title>
+
+    <style>
+body {
+    font-family: 'Arial';
+    font-size: 10pt;
+    margin: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 2em;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 6px 8px;
+    text-align: center; /* <-- To centrira vse */
+    vertical-align: middle;
+}
+
+th {
+    background-color: #aad18a;
+}
+
+.header-container {
+  font-family: Arial, sans-serif;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 100px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.naslov {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 24pt;
+  font-weight: bold;
+  margin-left: 100px;
+}
+    </style>
+</head>
+<body>
+    <div class="header-container">
+      <img src="data:image/png;base64,{{ logo_base64 }}" class="logo" alt="Logo">
+      <div class="naslov">{{ naslov }}</div>
+    </div>
+        {{ table_html|safe }}
+</body>
+</html>

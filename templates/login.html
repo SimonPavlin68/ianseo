@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <title>Prijava</title>
+  <style>
+    body { font-family: sans-serif; background: #f9f9f9; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    form { background: white; padding: 2em; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+    input { display: block; width: 100%; padding: 0.5em; margin-top: 0.5em; }
+    button { margin-top: 1em; background: #3498db; color: white; padding: 0.5em; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <form method="POST">
+    <h2>Prijava</h2>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <p style="color: red;">{{ messages[0] }}</p>
+      {% endif %}
+    {% endwith %}
+    <label>Uporabniško ime:</label>
+    <input type="text" name="username" required>
+    <label>Geslo:</label>
+    <input type="password" name="password" required>
+    <button type="submit">Prijava</button>
+  </form>
+</body>
+</html>
+</title>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ naslov }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon" />
+    <style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1em 0;
+        font-family: Arial, sans-serif;
+    }
+    thead tr {
+        background-color: #c4d79b; /* svetlo zelena */
+        font-weight: bold;
+        border: 2px solid #5a7320; /* temnejša zelena obroba */
+    }
+    thead th {
+        padding: 8px;
+        border: 2px solid #5a7320;
+        text-align: left;
+    }
+    tbody td {
+        border: 1px solid #555;
+        padding: 6px 8px;
+    }
+    tbody td.tocke {
+        color: red;
+        font-weight: bold;
+    }
+        .button {
+            display: inline-block;
+            padding: 0.5em 1em;
+            margin-bottom: 2em;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!--h1>Povzetek tekem</h1-->
+    <h2>{{ naslov }}</h2>
+
+    {% for ime_skupine, tabela in skupine %}
+        <h2>{{ ime_skupine }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    {% for celica in tabela[0] %}
+                        <th>{{ celica }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for vrstica in tabela[1:] %}
+                    <tr>
+                        {% for celica in vrstica %}
+                            <td>{{ celica }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+
+<div style="text-align: left;">
+    <a href="{{ url_for('index') }}" style="display:inline-block; padding:0.5em 1em; background:#007bff; color:white; text-decoration:none; border-radius:4px;">← Nazaj</a>
+        <a href="{{ url_for('download_summary', tip=izbran_tip) }}" style="display:inline-block; padding:0.5em 1em; background:#007bff; color:white; text-decoration:none; border-radius:4px;">CSV ({{ izbran_tip }})</a>
+</div>
+</body>
+</html>

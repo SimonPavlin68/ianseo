@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <style>
+        body {
+            font-family: 'Arial';
+            font-size: 10pt;
+            margin: 0;
+            padding: 0;
+        }
+
+.header-container {
+  font-family: Arial, sans-serif;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 100px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.naslov {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 24pt;
+  font-weight: bold;
+  margin-left: 250px;
+}
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <img src="data:image/png;base64,{{ logo_base64 }}" class="logo" alt="Logo">
+        <div class="naslov">{{ naslov }}</div>
+    </div>
+</body>
+</html>

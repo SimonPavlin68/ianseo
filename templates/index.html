@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <title>Seznam tekem</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 2em;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 2em;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+        .button {
+            padding: 0.5em 1em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 4px;
+        }
+        .success {
+            color: green;
+            margin-top: 1em;
+        }
+        pre {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 1em;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 1em;
+            font-family: monospace;
+        }
+        .tabs {
+    margin-bottom: 10px;
+}
+.tab-button {
+    background: #eee;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.tab-button.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border: 1px solid #0056b3;
+}
+    </style>
+    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script-->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon" />
+</head>
+<body>
+<div style="position: absolute; top: 1em; right: 1em; text-align: right;">
+    <p style="display: flex; align-items: center; justify-content: flex-end; gap: 1em;">
+      👋 Pozdravljen
+      <strong title="{{ session.role }}">{{ session.username|capitalize }}</strong> |
+
+      <a href="{{ url_for('settings') }}" title="Nastavitve" style="text-decoration: none; font-size: 1.2em;">
+        ☰
+      </a>
+
+      <a href="{{ url_for('logout') }}" style="color:red;">🚪 Odjava</a>
+    </p>
+</div>
+
+    <h1>Seznam tekem (Ianseo)</h1>
+<!-- Zavihek -->
+<div class="tabs">
+    {% set tipi = tekme | map(attribute='type') | unique | list %}
+    {% for tip in tipi %}
+        <button class="tab-button" onclick="odpriZavihek('{{ tip }}', this)">{{ tip }}</button>
+    {% endfor %}
+</div>
+<form id="tabForm" method="POST" style="display: none;">
+  <input type="hidden" name="shrani_tab" value="1">
+  <input type="hidden" name="izbran_tab" id="hiddenTabInput">
+</form>
+
+<!-- Tabele po tipu -->
+{% for tip in tipi %}
+<!--div class="tab-content" id="tab-{{ tip }}" style="{% if not loop.first %}display:none;{% endif %}"-->
+<div class="tab-content" id="tab-{{ tip }}" {% if tip != izbran_tip %}style="display:none;"{% endif %}>
+    <table>
+        <thead>
+            <tr>
+                <th>Opis</th>
+                <th>Povezava</th>
+                <th>Tip</th>
+                <th>Dodal</th>
+                <th style="width: 40px; text-align: center;">Aktivno</th>
+                <th style="width: 40px; text-align: center;">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in tekme if row.type == tip %}
+            <tr>
+                <td>{{ row.info }}</td>
+                <td><a href="{{ row.url }}" target="_blank">Odpri Ianseo</a></td>
+                <td>{{ row.type }}</td>
+                <td>{{ row.added_by|capitalize or "-" }}</td>
+                <td style="text-align: center;">
+                    <input type="checkbox" disabled {% if not row.disabled %}checked{% endif %}>
+                </td>
+                <td style="white-space: nowrap; width: 80px;">
+                    <div style="display: flex; gap: 6px;">
+                        {% if session.role == 'admin' or session.username == row.added_by %}
+                        <button type="button" class="button edit-btn"
+                                onclick='krnekiEnEdit({{ row | tojson }})'
+                                title="Uredi"
+                                style="background-color: transparent; border: none; cursor: pointer; font-size: 1.2em;">
+                            ✏️
+                        </button>
+                        <form method="POST" style="display:inline;" data-info="{{ row.info }}" onsubmit="return potrdiBrisanje(this);">
+                            <button
+                                type="submit"
+                                name="izbrisi_tekmo"
+                                value="{{ row.info }}"
+                                class="button"
+                                style="background-color: transparent; color: black; font-size: 0.9em; border: none; cursor: pointer;"
+                                title="Delete">
+                                🗑️
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <form method="POST">
+      <input type="hidden" name="ustvari_povzetek" value="1">
+      <input type="hidden" name="izbran_tab" value="{{ tip }}">
+      <button type="submit" class="button">🔄 Premelji za {{ tip }}</button>
+    </form>
+    <!--form action="{{ url_for('summary') }}" method="get" style="margin-top: 0.5em;">
+        <input type="hidden" name="tip" value="{{ tip }}">
+        <button type="submit" class="button">📄 Odpri tabelo posamično za {{ tip }}</button>
+    </form-->
+    <form action="/pdf_posamezno" method="get" style="margin-top: 0.5em;">
+        <input type="hidden" name="izbran_tab" value="{{ tip }}">
+        <button type="submit" class="button">📄 Razvrstitev 2025 (PDF) za {{ tip }}</button>
+    </form>
+    <form action="/pdf" method="get" style="margin-top: 0.5em;">
+        <input type="hidden" name="izbran_tab" value="{{ tip }}">
+        <button type="submit" class="button">📄 Razvrstitev društev 2025 (PDF) za {{ tip }}</button>
+    </form>
+
+</div>
+{% endfor %}
+<hr>
+<button id="toggleFormBtn" class="button" style="font-size: 1em; padding: 0.2em 0.5em; margin-bottom: 1em;">
+  ➕ Dodaj tekmo
+</button>
+        <div id="addCompetitionForm" style="display:none; margin-bottom: 2em; border: 1px solid #ccc; padding: 1em; border-radius: 5px;">
+        <h2>Dodaj novo tekmo</h2>
+        <form method="POST">
+            <input type="hidden" name="old_info">
+            <label for="info">Opis tekme:</label><br>
+            <input type="text" id="info" name="info" required style="width: 100%; margin-bottom: 1em;"><br>
+            <label for="id_tekmovanja">ID tekmovanja (npr. 23259):</label><br>
+            <input type="text" id="id_tekmovanja" name="id_tekmovanja" pattern="\d+" required style="width: 100%; margin-bottom: 1em;"><br>
+            <label for="type">Tip tekme:</label>
+            <select name="type" id="type" required></select><br><br>
+            <label><input type="checkbox" name="active" checked> Tekma je aktivna</label><br><br>
+            <button type="submit" name="dodaj_tekmo" class="button">➕ Dodaj tekmo</button>
+        </form>
+    </div>
+    <form method="POST" style="margin-top: 1em;">
+        <!--button type="submit" name="ustvari_povzetek" class="button">🔄 Preberi tekme</button-->
+        <button type="submit" name="pocisti_output" class="button" style="background-color: #dc3545;">🧹 Počisti log</button>
+    </form>
+    {% if povzetek_ustvarjen %}
+        <p class="success">✅ Tekme uspešno prebrane!</p>
+        <pre>{{ output }}</pre>
+        <p>
+    </p>
+    {% endif %}
+<script>
+  const toggleBtn = document.getElementById("toggleFormBtn");
+  const formDiv = document.getElementById("addCompetitionForm");
+
+  toggleBtn.addEventListener("click", () => {
+    if (formDiv.style.display === "none") {
+      formDiv.style.display = "block";
+      toggleBtn.textContent = "➖ Zapri obrazec";
+      const izbranTip = sessionStorage.getItem('zadnjiTab');
+        if (izbranTip && matchTypes.includes(izbranTip)) {
+          selectElement.value = izbranTip;
+        }
+    } else {
+      formDiv.style.display = "none";
+      toggleBtn.textContent = "➕ Dodaj tekmo";
+    }
+  });
+
+  function potrdiBrisanje(form) {
+    const info = form.getAttribute('data-info');
+    return confirm("Are you sure you want to delete: " + info + "?");
+  }
+
+function krnekiEnEdit(item) {
+    const formDiv = document.getElementById("addCompetitionForm");
+
+    // Odpri obrazec, če še ni odprt
+    if (formDiv.style.display === "none") {
+        formDiv.style.display = "block";
+        toggleBtn.textContent = "➖ Zapri obrazec";
+    }
+
+    // Razbij URL, da dobiš ID
+    const idTekmovanja = item.url?.split('/')?.[5] || "";
+
+    // Izpolni obrazec
+    document.querySelector("input[name='info']").value = item.info || "";
+    document.querySelector("input[name='id_tekmovanja']").value = idTekmovanja;
+    document.querySelector("input[name='old_info']").value = item.info || "";
+    document.querySelector("input[name='active']").checked = !item.disabled;
+    document.querySelector("select[name='type']").value = item.type;
+
+    // Nastavi gumb na "spremeni"
+    const btn = document.querySelector("#addCompetitionForm button[type='submit']");
+    btn.name = "uredi_tekmo";
+    btn.textContent = "💾 Spremeni tekmo";
+  }
+
+function odpriZavihek(ime, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    const tab = document.getElementById('tab-' + ime);
+    if (tab) tab.style.display = 'block';
+
+    document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    const hiddenInput = document.getElementById('izbran_tab');
+    if (hiddenInput) hiddenInput.value = ime;
+
+    posodobiSubmitGumb(ime);
+
+    // Shrani lokalno (za hitro osvežitev)
+    sessionStorage.setItem('zadnjiTab', ime);
+
+    // Pošlji tudi na strežnik
+    const form = document.getElementById('tabForm');
+    const input = document.getElementById('hiddenTabInput');
+    if (form && input) {
+        input.value = ime;
+        fetch("/", {
+            method: "POST",
+            body: new FormData(form)
+        });
+    }
+}
+
+
+const matchTypes = ['AH', '3D', 'Dvorana', 'Tarčno', '900 krogov'];
+  const selectElement = document.getElementById('type');
+
+  matchTypes.forEach(type => {
+    const option = document.createElement('option');
+    option.value = type;
+    option.textContent = type;
+    selectElement.appendChild(option);
+  });
+
+  async function generatePDF() {
+  print(font_path)
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // Dodaj naslov
+  doc.setFontSize(16);
+  doc.text('Poročilo o tekmah', 14, 20);
+
+  // Dodaj opisno besedilo
+  doc.setFontSize(12);
+  doc.text('Spodaj so prikazane upoštevane tekme in povzetek po klubih.', 14, 30);
+
+  // Dodaj sliko (mora biti naložena in dostopna)
+  const img = document.getElementById('logo');
+  if (img.complete) {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    const imageData = canvas.toDataURL('image/png');
+    doc.addImage(imageData, 'PNG', 150, 10, 40, 20); // (x, y, width, height)
+  }
+
+  // Naloži CSV datoteko
+  const fileInput = document.getElementById('csvFile');
+  const file = fileInput.files[0];
+  if (!file) {
+    alert("Izberi CSV datoteko.");
+    return;
+  }
+
+  const text = await file.text();
+  const lines = text.trim().split('\n');
+
+  // Loči sekciji
+  const splitIndex = lines.findIndex(line => line.startsWith("Povzetek po klubih"));
+  const tekmeLines = lines.slice(1, splitIndex); // Brez naslova "Upoštevane tekme"
+  const tabelaLines = lines.slice(splitIndex + 1);
+
+  // Dodaj tekme kot tekstni seznam
+  doc.setFontSize(12);
+  doc.text('Upoštevane tekme:', 14, 50);
+  tekmeLines.forEach((line, idx) => {
+    doc.text(`• ${line}`, 20, 60 + idx * 6);
+  });
+
+  // Pripravi tabelo iz CSV
+  const [headerLine, ...dataLines] = tabelaLines;
+  const headers = headerLine.split(',');
+  const rows = dataLines.map(line => line.split(','));
+
+  // Izračun začetne višine (da se ne prepiše čez prejšnji tekst)
+  const tableStartY = 60 + tekmeLines.length * 6 + 10;
+
+  // Dodaj tabelo
+  doc.autoTable({
+    head: [headers],
+    body: rows,
+    startY: tableStartY
+  });
+
+  doc.save("porocilo.pdf");
+}
+
+function posodobiSubmitGumb(tip) {
+    const tab = document.getElementById('tab-' + tip);
+    if (!tab) return;
+
+    const tabela = tab.querySelector('table');
+    const gumb = tab.querySelector('form[action="/pdf"] button');
+
+    if (!gumb || !tabela) {
+        if (gumb) gumb.disabled = true;
+        return;
+    }
+
+    const vrstice = tabela.querySelectorAll('tbody tr');
+    gumb.disabled = (vrstice.length === 0);
+}
+
+// Ob nalaganju strani nastavi začetno stanje gumba
+document.addEventListener('DOMContentLoaded', () => {
+  let izbranTip = "{{ izbran_tip|default('') }}";
+
+  if (!izbranTip) {
+    izbranTip = sessionStorage.getItem('zadnjiTab') || "{{ tipi[0] }}";
+  }
+
+  const btn = Array.from(document.querySelectorAll('.tab-button'))
+                   .find(b => b.textContent.trim() === izbranTip);
+
+  odpriZavihek(izbranTip, btn);
+
+  // TUKAJ dodaj:
+  if (matchTypes.includes(izbranTip)) {
+    selectElement.value = izbranTip;
+  }
+});
+
+</script>
+</body>
+</html>
