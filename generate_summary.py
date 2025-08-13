@@ -132,9 +132,16 @@ def generiraj_povzetek_za_tip(izbran_tip):
             header = ['Mesto', 'Tekmovalec', 'Klub'] + tekme_sorted + ['Skupaj']
             writer.writerow(header)
 
+            # uvrstitve = sorted(
+            #    tekmovalci.items(),
+            #    key=lambda x: x[1]['skupaj_točke'],
+            #    reverse=True
+            # )
+
+            # Razvrsti tekmovalce po točkah, nato pa po krogih
             uvrstitve = sorted(
                 tekmovalci.items(),
-                key=lambda x: x[1]['skupaj_točke'],
+                key=lambda x: (x[1]['skupaj_točke'], x[1]['skupaj_krogi']),
                 reverse=True
             )
 
