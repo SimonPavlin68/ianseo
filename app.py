@@ -12,6 +12,7 @@ import os
 import base64
 from utils import nalozi_normalizacijo_datoteko, nalozi_popravke_tekmovalcev_datoteko, load_min_tocke, save_min_tocke
 from utils import POKALSKI_NASLOVI
+import tempfile
 
 logging.basicConfig(filename='record.log', level=logging.DEBUG)
 
@@ -336,7 +337,6 @@ def odstrani_stevilko(text):
     else:
         return text  # če ni pomišljaja, vrni celoten niz
 
-
 @app.route('/pdf')
 def generate_pdf():
     # Preberi izbran tab iz GET parametrov
@@ -397,12 +397,12 @@ def generate_pdf():
     rendered = render_template('report_klubi.html',
                                naslov=naslov,
                                table_html=table_html,
-                               izbran_tip=izbran_tab,
                                tekme_html=tekme_html,
                                logo_base64=logo_base64)
     # Nastavi pot do wkhtmltopdf.exe - popravi, če ni v PATH
-    config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
-    pdf = pdfkit.from_string(rendered, False, configuration=config)
+    # config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
+    # pdf = pdfkit.from_string(rendered, False, configuration=config)
+    pdf = pdfkit.from_string(rendered, False)
 
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
@@ -416,57 +416,49 @@ def generate_pdf_posamezno():
     izbran_tab = request.args.get('izbran_tab', default="AH")
     naslov = POKALSKI_NASLOVI.get(izbran_tab, "-")
 
-    # Naloži CSV povzetek po posameznikih
-    csv_filename = f'povzetek_{izbran_tab}.csv'  # pazljivo, naj bo ta CSV pravilno generiran
+    # Naloži CSV povzetek
+    csv_filename = f'povzetek_{izbran_tab}.csv'
     try:
         with open(csv_filename, encoding='utf-8') as f:
             lines = [line.strip().split(",") for line in f if line.strip()]
     except FileNotFoundError:
         return f"Povzetek za tip {izbran_tab} ne obstaja."
 
-    # Skupine so ločene z vrstico, kjer je vsa polja prazna ali prva celica vsebuje naziv skupine
+    # Obdelava skupin
     skupine = []
     trenutna_skupina = None
-
     for row in lines:
         if len(row) == 1 and row[0].strip():  # Nova skupina
             if trenutna_skupina:
                 skupine.append(trenutna_skupina)
-            trenutna_skupina = [row[0], []]  # [ime_skupine, tabela]
+            trenutna_skupina = [row[0], []]
         elif trenutna_skupina:
             trenutna_skupina[1].append(row)
-
     if trenutna_skupina:
         skupine.append(trenutna_skupina)
 
-    # Pretvori skupine v format za render (ime_skupine, tabela)
-    # skupine_render = []
-    # for ime, tabela in skupine:
-    #    if not tabela:
-    #        continue
-    #    skupine_render.append((ime, tabela))
+    # Čiščenje podatkov
     skupine_render = []
     for ime, tabela in skupine:
         if not tabela:
             continue
-        # Poišči stolpec "Klub" v prvi vrstici (glavi)
         try:
             klub_idx = tabela[0].index("Klub")
         except ValueError:
             klub_idx = -1
 
         if klub_idx != -1:
-            # Odstrani številke iz vsake vrstice v stolpcu "Klub"
             for vrstica in tabela[1:]:
                 if len(vrstica) > klub_idx:
                     vrstica[klub_idx] = odstrani_stevilko(vrstica[klub_idx])
 
         skupine_render.append((ime, tabela))
-    # Logo v base64 za prikaz v HTML
+
+    # Logo za header
     logo_path = os.path.join(app.root_path, 'static', 'images', 'logo.png')
     logo_base64 = get_base64_image(logo_path)
 
-    # Renderiraj HTML predlogo za PDF
+    # HTML vsebina
     rendered = render_template(
         "report.html",
         naslov=naslov,
@@ -475,28 +467,37 @@ def generate_pdf_posamezno():
         logo_base64=logo_base64
     )
 
-    header_html = render_template("pdf_header.html", logo_base64=logo_base64, naslov=naslov)
-    header_file_path = os.path.join(app.root_path, "temp_header.html")
-    with open(header_file_path, "w", encoding="utf-8") as f:
-        f.write(header_html)
+    # Ustvari začasno datoteko za header
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".html", mode="w", encoding="utf-8") as tmp_header:
+        header_html = render_template("pdf_header.html", logo_base64=logo_base64, naslov=naslov)
+        tmp_header.write(header_html)
+        header_file_path = tmp_header.name
 
+    # Nastavitve za PDF
     options = {
         'page-size': 'A4',
         'orientation': 'Landscape',
         'encoding': "UTF-8",
         'header-html': header_file_path,
-        'margin-top': '30mm',  # Dovolj prostora za header
+        'margin-top': '30mm',
         'header-spacing': '5',
     }
-    config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
-    # pdf = pdfkit.from_string(rendered, False, configuration=config)
-    pdf = pdfkit.from_string(rendered, False, options=options, configuration=config)
 
+    # Generiraj PDF
+    try:
+        pdf = pdfkit.from_string(rendered, False, options=options)
+    except Exception as e:
+        os.remove(header_file_path)
+        return f"Napaka pri generiranju PDF: {e}"
+
+    # Počisti začasno datoteko
+    os.remove(header_file_path)
+
+    # Odgovor
     response = make_response(pdf)
     filename = f"povzetek_posamezno_{izbran_tab}.pdf"
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = f'attachment; filename={filename}'
-
     return response
 
 
