@@ -202,11 +202,41 @@
 
 <div id="min-rezultati-tab" class="tab-vsebina">
   <h3>Minimalni rezultati za točke:</h3>
-  <ul>
-    {% for slog, prag in min_rezultat.items() %}
-      <li>{{ slog }}: {{ prag }}</li>
-    {% endfor %}
-  </ul>
+
+  {% if session.role == 'admin' %}
+    <form method="POST" action="{{ url_for('update_min_tocke') }}">
+      <table>
+        <thead>
+          <tr>
+            <th>Vrsta tekme</th>
+            <th>Minimalni rezultat</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for slog, prag in min_rezultat.items() %}
+          <tr>
+            <td>{{ slog }}</td>
+            <td>
+              <input type="number" name="{{ slog }}" value="{{ prag }}" min="0">
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div style="margin-top: 10px;">
+        <button type="submit" name="action" value="save">💾 Shrani spremembe</button>
+        {% if show_reset %}
+          <button type="submit" name="action" value="reset">🔄 Reset na privzete</button>
+        {% endif %}
+      </div>
+    </form>
+  {% else %}
+    <ul>
+      {% for slog, prag in min_rezultat.items() %}
+        <li>{{ slog }}: {{ prag }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 </div>
 
 <p><a href="{{ url_for('index') }}" style="display:inline-block; padding:0.5em 1em; background:#007bff; color:white; text-decoration:none; border-radius:4px;">← Nazaj</a></p>

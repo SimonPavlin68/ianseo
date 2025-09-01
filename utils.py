@@ -1,5 +1,7 @@
 import csv
-
+import os
+import json
+from config import MIN_TOCKE_PATH
 
 def nalozi_normalizacijo_datoteko() -> dict:
     pot_do_csv = 'normalizacija_klubov.csv'
@@ -57,3 +59,22 @@ POKALSKI_NASLOVI = {
     "Tarčno": "Slovenski tarčni pokal 2025",
     "Dvorana": "Slovenski dvoranski pokal 2025"
 }
+
+# Branje vrednosti iz datoteke
+def load_min_tocke():
+    if os.path.exists(MIN_TOCKE_PATH):
+        with open(MIN_TOCKE_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    else:
+        # privzete vrednosti, če datoteka ne obstaja
+        return {
+            "AH": 130,
+            "3D": 159,
+            "Dvorana": 180,
+            "Tarčno": 216
+        }
+
+# Shranjevanje/spreminjanje vrednosti
+def save_min_tocke(tocke_dict):
+    with open(MIN_TOCKE_PATH, "w", encoding="utf-8") as f:
+        json.dump(tocke_dict, f, indent=4)

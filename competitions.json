@@ -68,5 +68,12 @@
     "type": "3D",
     "disabled": false,
     "added_by": "simon"
+  },
+  {
+    "info": "AH Turjak",
+    "url": "https://www.ianseo.net/TourData/2025/24257/IC.php",
+    "type": "AH",
+    "disabled": false,
+    "added_by": "simon"
   }
 ]

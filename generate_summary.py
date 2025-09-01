@@ -1,4 +1,4 @@
-from config import MIN_REZULTAT_ZA_TOCKE
+from config import DEFAULT_MIN_REZULTAT_ZA_TOCKE
 import csv
 import sys
 from collections import defaultdict
@@ -60,8 +60,8 @@ def generiraj_povzetek_za_tip(izbran_tip):
     # print("--- staro ---")
     # print(popravki_imen)
     popravki_imen = nalozi_popravke_tekmovalcev_datoteko()
-    # print("--- novo ---")
-    # print(popravki_imen)
+    print("--- novo ---")
+    print(popravki_imen)
 
     with open("rezultati_filtrirani.csv", encoding='utf-8-sig') as f:
         reader = csv.DictReader(f)
@@ -97,9 +97,9 @@ def generiraj_povzetek_za_tip(izbran_tip):
         for tekmovanje, seznam in tekme.items():
             razvrščeni = sorted(seznam, key=lambda x: x[2], reverse=True)
             for i, (tekmovalec, klub, rezultat) in enumerate(razvrščeni):
-                if rezultat < MIN_REZULTAT_ZA_TOCKE.get(izbran_tip, 130):
+                if rezultat < DEFAULT_MIN_REZULTAT_ZA_TOCKE.get(izbran_tip, 130):
                     točke = 0
-                    print('jebiga premalo: ' + tekmovalec + ' ' + str(rezultat) + ' min: ' + str(MIN_REZULTAT_ZA_TOCKE.get(izbran_tip, 130)))
+                    print('jebiga premalo: ' + tekmovalec + ' ' + str(rezultat) + ' min: ' + str(DEFAULT_MIN_REZULTAT_ZA_TOCKE.get(izbran_tip, 130)))
                 else:
                     točke = točkovanje[i] if i < len(točkovanje) else 0
                 podatki = results[(slog, kategorija)][tekmovalec]

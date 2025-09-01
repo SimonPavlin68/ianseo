@@ -3,14 +3,14 @@ import json
 import subprocess
 import scraper
 import csv
-from config import COMPETITIONS_PATH, USERS_PATH, CATEGORIES_PATH, MIN_REZULTAT_ZA_TOCKE, EXCLUDED_CATEGORIES_PATH
+from config import COMPETITIONS_PATH, USERS_PATH, CATEGORIES_PATH, EXCLUDED_CATEGORIES_PATH, DEFAULT_MIN_REZULTAT_ZA_TOCKE
 import logging
 import pandas as pd
 import pdfkit
 import io
 import os
 import base64
-from utils import nalozi_normalizacijo_datoteko, nalozi_popravke_tekmovalcev_datoteko
+from utils import nalozi_normalizacijo_datoteko, nalozi_popravke_tekmovalcev_datoteko, load_min_tocke, save_min_tocke
 from utils import POKALSKI_NASLOVI
 
 logging.basicConfig(filename='record.log', level=logging.DEBUG)
@@ -168,7 +168,6 @@ def summary():
 
 @app.route("/settings", methods=["GET"])
 def settings():
-    logging.debug("--- settings ---")
     if "username" not in session:
         return redirect(url_for("login"))
 
@@ -187,14 +186,22 @@ def settings():
     normalizacija_klubov = nalozi_normalizacijo_datoteko().items()
     normalizacija_tekmovalcev = nalozi_popravke_tekmovalcev_datoteko().items()
 
+    min_rezultat = load_min_tocke()
+
+    # 🔽 Preveri, če je katera vrednost spremenjena glede na default
+    show_reset = any(
+        min_rezultat.get(k) != v for k, v in DEFAULT_MIN_REZULTAT_ZA_TOCKE.items()
+    )
+
     return render_template(
         "settings.html",
         kategorije=kategorije,
         izloceni=izloceni,
-        min_rezultat=MIN_REZULTAT_ZA_TOCKE,
+        min_rezultat=min_rezultat,
         kol_vrstic=kol_vrstic,
         normalizacija_klubov=normalizacija_klubov,
-        normalizacija_tekmovalcev=normalizacija_tekmovalcev
+        normalizacija_tekmovalcev=normalizacija_tekmovalcev,
+        show_reset=show_reset
     )
 
 
@@ -273,6 +280,25 @@ def shrani_normalizacijo_tekmovalcev():
             writer.writerow([napacno, pravilno])
 
     flash("✅ Spremembe shranjene (tekmovalci).")
+    return redirect(url_for("settings"))
+
+
+
+@app.route("/update_min_tocke", methods=["POST"])
+def update_min_tocke():
+
+    action = request.form.get("action", "save")
+
+    if action == "reset":
+        # reset na privzete vrednosti
+        save_min_tocke(DEFAULT_MIN_REZULTAT_ZA_TOCKE)
+        flash("Minimalni rezultati so bili ponastavljeni na privzete vrednosti.", "success")
+    else:
+        # shrani nove vrednosti
+        novi_pragi = {k: int(v) for k, v in request.form.items() if k != "action"}
+        save_min_tocke(novi_pragi)
+        flash("Minimalni rezultati so bili posodobljeni.", "success")
+
     return redirect(url_for("settings"))
 
 
