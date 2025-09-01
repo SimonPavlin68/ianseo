@@ -91,7 +91,13 @@ def generiraj_povzetek_za_tip(izbran_tip):
     tekme_sorted = sorted(all_competitions, key=extract_date_from_competition_name)
     print("--- bum ---")
     print(tekme_sorted)
-
+    # Zdaj še shranimo tekme posebej
+    with open(f"tekme_{izbran_tip}.csv", "w", encoding="utf-8-sig", newline='') as f:
+        print("--- tresk ---")
+        writer = csv.writer(f)
+        writer.writerow(["Upoštevane tekme"])
+        for tekma in tekme_sorted:
+            writer.writerow([tekma])
     # Zgradi results po tekmovalcih
     for (slog, kategorija), tekme in raw_results.items():
         for tekmovanje, seznam in tekme.items():

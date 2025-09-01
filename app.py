@@ -377,11 +377,28 @@ def generate_pdf():
     logo_path = os.path.join(app.root_path, 'static', 'images', 'logo.png')
     logo_base64 = get_base64_image(logo_path)
 
+    # Preberi tekme iz datoteke tekme_{izbran_tip}.csv
+    tekme = []
+    with open(f"tekme_{izbran_tab}.csv", encoding="utf-8-sig") as f:
+        reader = csv.reader(f)
+        next(reader)  # preskoči header "Upoštevane tekme"
+        for row in reader:
+            if row:
+                # nadomesti <br> z navadnim presledkom
+                tekme.append(row[0].replace("<br>", ", "))
+
+    # Pretvori v <ul><li> seznam
+    tekme_html = "<ul>"
+    for t in tekme:
+        tekme_html += f"<li>{t}</li>"
+    tekme_html += "</ul>"
+
     # Render HTML template in pošlji v pdfkit za PDF generacijo
     rendered = render_template('report_klubi.html',
                                naslov=naslov,
                                table_html=table_html,
                                izbran_tip=izbran_tab,
+                               tekme_html=tekme_html,
                                logo_base64=logo_base64)
     # Nastavi pot do wkhtmltopdf.exe - popravi, če ni v PATH
     config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
