@@ -146,6 +146,11 @@
         </tbody>
     </table>
     <form method="POST">
+        <label>
+            <input type="checkbox" name="pokal_fertik" value="1" checked>
+            Generiraj končno stanje
+        </label>
+        <br>
       <input type="hidden" name="ustvari_povzetek" value="1">
       <input type="hidden" name="izbran_tab" value="{{ tip }}">
       <button type="submit" class="button">🔄 Premelji za {{ tip }}</button>

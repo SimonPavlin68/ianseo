@@ -89,6 +89,8 @@ def index():
         if "shrani_tab" in request.form:
             session["zadnji_tab"] = request.form.get("izbran_tab", "AH")
         if "ustvari_povzetek" in request.form:
+            fertik = request.form.get("pokal_fertik", "0") == "1"
+            print(f"fertik !!!: {fertik}")
             tip = request.form.get("izbran_tab", "AH")
             # Zaženi scraper in generate_summary, ujemi izpis
             import io
@@ -99,7 +101,7 @@ def index():
                 scraper.main()
             # Zaženi generate_summary.py kot subprocess in ujemi output
             proc = subprocess.run(
-                ["python", "generate_summary.py", tip],
+                ["python", "generate_summary.py", tip, str(fertik).lower()],
                 capture_output=True,
                 text=True,
                 encoding="utf-8"
@@ -339,12 +341,20 @@ def odstrani_stevilko(text):
 
 @app.route('/pdf')
 def generate_pdf():
-    # Preberi izbran tab iz GET parametrov
     izbran_tab = request.args.get('izbran_tab', default="AH")
-    # print(izbran_tab)
     naslov = POKALSKI_NASLOVI.get(izbran_tab, "-")
+
+    # Preveri, ali obstaja končni povzetek po klubih
+    final_csv_filename = f'povzetek_klubi_{izbran_tab}_final.csv'
+    regular_csv_filename = f'povzetek_klubi_{izbran_tab}.csv'
+
+    if os.path.exists(final_csv_filename):
+        csv_filename = final_csv_filename
+        naslov += " (končno stanje)"
+    else:
+        csv_filename = regular_csv_filename
+
     # Preberi CSV
-    csv_filename = f'povzetek_klubi_{izbran_tab}.csv'
     try:
         with open(csv_filename, encoding='utf-8') as f:
             lines = f.readlines()
@@ -400,14 +410,13 @@ def generate_pdf():
                                tekme_html=tekme_html,
                                logo_base64=logo_base64)
     # Nastavi pot do wkhtmltopdf.exe - popravi, če ni v PATH
-    # config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
-    # pdf = pdfkit.from_string(rendered, False, configuration=config)
-    pdf = pdfkit.from_string(rendered, False)
+    config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
+    pdf = pdfkit.from_string(rendered, False, configuration=config)
+    # pdf = pdfkit.from_string(rendered, False)
 
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = f'attachment; filename=povzetek_{izbran_tab}.pdf'
-    # response.headers['Content-Disposition'] = 'attachment; filename=povzetek.pdf'
     return response
 
 
@@ -416,8 +425,17 @@ def generate_pdf_posamezno():
     izbran_tab = request.args.get('izbran_tab', default="AH")
     naslov = POKALSKI_NASLOVI.get(izbran_tab, "-")
 
+    # Preveri, če obstaja končni povzetek
+    final_csv_filename = f'povzetek_{izbran_tab}_final.csv'
+    regular_csv_filename = f'povzetek_{izbran_tab}.csv'
+
+    if os.path.exists(final_csv_filename):
+        csv_filename = final_csv_filename
+        naslov += " (končno stanje)"  # dodamo oznako v naslov
+    else:
+        csv_filename = regular_csv_filename
+
     # Naloži CSV povzetek
-    csv_filename = f'povzetek_{izbran_tab}.csv'
     try:
         with open(csv_filename, encoding='utf-8') as f:
             lines = [line.strip().split(",") for line in f if line.strip()]
@@ -485,7 +503,9 @@ def generate_pdf_posamezno():
 
     # Generiraj PDF
     try:
-        pdf = pdfkit.from_string(rendered, False, options=options)
+        config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
+        pdf = pdfkit.from_string(rendered, False, configuration=config, options=options)
+        # pdf = pdfkit.from_string(rendered, False, options=options)
     except Exception as e:
         os.remove(header_file_path)
         return f"Napaka pri generiranju PDF: {e}"

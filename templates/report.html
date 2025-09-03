@@ -74,7 +74,13 @@ th {
               {{ krogi }}
             {% endif %}
           </td>
-          <td style="color: red;">{{ tocke }}</td>
+          <td style="color: red;">
+            {% if '*' in tocke %}
+              <s>{{ tocke.strip('*') }}</s>
+            {% else %}
+              {{ tocke }}
+            {% endif %}
+          </td>
         {% else %}
           <td></td>
           <td></td>
