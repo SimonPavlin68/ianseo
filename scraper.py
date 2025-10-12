@@ -1,4 +1,5 @@
 import json
+import os
 import re
 import requests
 from bs4 import BeautifulSoup
@@ -9,6 +10,38 @@ from utils import normaliziraj_klub
 
 def clean_club(text: str) -> str:
     return text.replace('\xa0', ' ').replace('\n', ' ').strip()
+
+
+def handle_not_jet(comp):
+    print("klekla!!! " + comp['info'])
+
+    info = comp['info']
+    parts = [p.strip() for p in info.split(",", 1)]
+    tekmovanje = parts[0] if parts else ""
+    datum = parts[1] if len(parts) > 1 else ""
+    # datoteka glede na tip
+    filename = f"tekme_{comp['type']}_not.json"
+    print(filename)
+    # če datoteka že obstaja, jo preberi
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            neupoštevane = json.load(f)
+    else:
+        neupoštevane = []
+
+    # dodaj novo tekmo (lahko HTML)
+    neupoštevane.append(f"{tekmovanje}<br>{datum}")
+
+    # zapiši nazaj
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(neupoštevane, f, ensure_ascii=False, indent=2)
+
+
+def clean_file(comp_type: str):
+    filename = f"tekme_{comp_type}_not.json"
+    print("remove: " + filename)
+    if os.path.exists(filename):
+        os.remove(filename)
 
 
 def parse_competition_info(html_text):
@@ -152,6 +185,7 @@ def parse_competition_results(url, allowed_categories, tip):
 
 
 def main():
+    clean_file("AH")  # TODO še ostalo
     with open(COMPETITIONS_PATH, "r", encoding="utf-8") as f:
         competitions = json.load(f)
 
@@ -200,6 +234,7 @@ def main():
             all_results.extend(results)
         except Exception as e:
             print(f"❌ NAPAKA pri prenosu {comp['url']}: {e}")
+            handle_not_jet(comp)
 
     print(f"\n📊 Skupno rezultatov po vseh tekmah: {len(all_results)}")
 

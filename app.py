@@ -90,7 +90,6 @@ def index():
             session["zadnji_tab"] = request.form.get("izbran_tab", "AH")
         if "ustvari_povzetek" in request.form:
             fertik = request.form.get("pokal_fertik", "0") == "1"
-            print(f"fertik !!!: {fertik}")
             tip = request.form.get("izbran_tab", "AH")
             # Zaženi scraper in generate_summary, ujemi izpis
             import io
@@ -396,18 +395,29 @@ def generate_pdf():
             if row:
                 # nadomesti <br> z navadnim presledkom
                 tekme.append(row[0].replace("<br>", ", "))
-
-    # Pretvori v <ul><li> seznam
     tekme_html = "<ul>"
     for t in tekme:
         tekme_html += f"<li>{t}</li>"
     tekme_html += "</ul>"
+
+    tekme_not = []
+    tekme_html_not = ""
+    filename = f"tekme_{izbran_tab}_not.json"
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            prazne_tekme = json.load(f)
+        tekme_html_not = "<ul>"
+        for t in prazne_tekme:
+            tc = t.replace("<br>", ", ")
+            tekme_html_not += f"<li>{tc}</li>"
+        tekme_html_not += "</ul>"
 
     # Render HTML template in pošlji v pdfkit za PDF generacijo
     rendered = render_template('report_klubi.html',
                                naslov=naslov,
                                table_html=table_html,
                                tekme_html=tekme_html,
+                               tekme_html_not=tekme_html_not,
                                logo_base64=logo_base64)
     # Nastavi pot do wkhtmltopdf.exe - popravi, če ni v PATH
     config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')

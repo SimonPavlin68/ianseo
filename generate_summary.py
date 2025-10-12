@@ -1,6 +1,8 @@
 from config import DEFAULT_MIN_REZULTAT_ZA_TOCKE
 import csv
 import sys
+import os
+import json
 from collections import defaultdict
 from datetime import datetime
 from utils import normaliziraj_klub, nalozi_popravke_tekmovalcev_datoteko
@@ -82,6 +84,13 @@ def generiraj_povzetek_za_tip(izbran_tip):
             raw_results[(slog, kategorija)][tekmovanje].append((tekmovalec, klub, rezultat))
 
     točkovanje = [25, 20, 15, 12] + list(range(11, 0, -1))
+    # all_competitions.add("Gradac<br>18.10.2025")
+    filename = f"tekme_{izbran_tip}_not.json"
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            prazne_tekme = json.load(f)
+        for t in prazne_tekme:
+            all_competitions.add(t)  # samo dodaj v set
     tekme_sorted = sorted(all_competitions, key=extract_date_from_competition_name)
     # Zdaj še shranimo tekme posebej
     with open(f"tekme_{izbran_tip}.csv", "w", encoding="utf-8-sig", newline='') as f:
@@ -179,6 +188,7 @@ def generiraj_povzetek_za_tip(izbran_tip):
             ])
 
     print(f"✅ Povzetek po klubih za tip '{izbran_tip}' shranjen v 'povzetek_klubi_{izbran_tip}.csv'.")
+
 
 def generiraj_povzetek_za_tip_final(izbran_tip):
     from collections import defaultdict
@@ -345,7 +355,7 @@ def generiraj_povzetek_za_tip_final(izbran_tip):
 
 
 def main(tp, frtk):
-    print(f"tip = {tp}, fertik = {frtk}")
+    # print(f"tip = {tp}, fertik = {frtk}")
     if frtk:
         print("po novem")
         generiraj_povzetek_za_tip_final(tp)

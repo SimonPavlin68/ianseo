@@ -55,7 +55,11 @@ th {
       <div class="naslov">{{ naslov }}</div>
     </div>
         {{ table_html|safe }}
-    <h3>Tekmovanja</h3>
+    <h3>Vsa tekmovanja</h3>
     {{ tekme_html|safe }}
+    {% if tekme_html_not|length > 0 %}
+    <h3>Preostala tekmovanja</h3>
+    {{ tekme_html_not|safe }}
+    {% endif %}
 </body>
 </html>
