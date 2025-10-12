@@ -82,5 +82,12 @@
     "type": "AH",
     "disabled": false,
     "added_by": "simon"
+  },
+  {
+    "info": "3D Bohinjska Bela",
+    "url": "https://www.ianseo.net/TourData/2025/24576/IC.php",
+    "type": "3D",
+    "disabled": false,
+    "added_by": "simon"
   }
 ]

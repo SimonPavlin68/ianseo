@@ -93,7 +93,7 @@ def parse_competition_info(html_text):
     return ime_tekme, klub, lokacija, datum
 
 
-def parse_competition_results(url, allowed_categories, tip):
+def parse_competition_results_old(url, allowed_categories, tip):
     resp = requests.get(url)
     resp.raise_for_status()
     html_text = resp.text
@@ -182,6 +182,125 @@ def parse_competition_results(url, allowed_categories, tip):
 
     print(f"✅ Najdenih rezultatov: {len(data)}")
     return data
+
+def parse_competition_results(url, allowed_categories, tip):
+    resp = requests.get(url)
+    resp.raise_for_status()
+    html_text = resp.text
+
+    ime_tekme, klub, lokacija, datum = parse_competition_info(html_text)
+
+    soup = BeautifulSoup(html_text, "html.parser")
+    current_category = None
+    data = []
+
+    # Mapiranje za normalizacijo kategorij in stilov
+    category_map = {
+        "men": "Člani",
+        "women": "Članice",
+        "female": "Članice",
+        "50+ men": "Starejši od 50 let",
+        "50+ women": "Starejše od 50 let",
+        "under 21 men": "Mlajši od 21 let",
+        "under 21 women": "Mlajše od 21 let",
+        "cadet men": "Mlajši od 18 let",
+        "cadet women": "Mlajše od 18 let",
+        "under 15 men": "Mlajši od 15 let",
+        "under 15 women": "Mlajše od 15 let",
+        "under 13 men": "Mlajši od 13 let",
+        "under 13 women": "Mlajše od 13 let",
+    }
+
+    stil_map = {
+        "dolgi log": "Dolgi lok",
+        "ukrivljeni lok": "Ukrivljeni lok",
+        "sestavljeni lok": "Sestavljeni lok",
+        "goli lok": "Goli lok",
+        "tradicionalni lok": "Tradicionalni lok",
+        "lovski lok": "Lovski lok"
+    }
+
+    for table in soup.find_all("table"):
+        for tr in table.find_all("tr"):
+            ths = tr.find_all("th")
+            tds = tr.find_all("td")
+
+            # 1. Detekcija kategorije
+            if len(ths) == 1 and "colspan" in ths[0].attrs:
+                cat_text = ths[0].get_text(strip=True)
+                m = re.match(r"(.+?)\s*-\s*(.+)", cat_text)
+                if m:
+                    stil_raw = m.group(1).strip()
+                    kategorija_raw = re.sub(r"\s*\[.*?\]", "", m.group(2)).strip()
+
+                    # normalizacija
+                    stil_norm = stil_map.get(stil_raw.lower(), stil_raw)
+                    kategorija_norm = category_map.get(kategorija_raw.lower(), kategorija_raw)
+
+                    if stil_norm in allowed_categories and kategorija_norm in allowed_categories[stil_norm]:
+                        current_category = f"{stil_norm} - {kategorija_norm}"
+                    else:
+                        current_category = None
+                        print(f"⚠️ Kategorija ni dovoljena: {stil_norm} - {kategorija_norm}")
+                else:
+                    print("⚠️ Neveljaven format kategorije:", cat_text)
+                    current_category = None
+                continue
+
+            # 2. Preskoči, če kategorija ni nastavljena
+            if current_category is None:
+                continue
+
+            # 3. Obdelava rezultatov
+            if len(tds) >= 5:
+                mesto = tds[0].get_text(strip=True)
+                tekmovalec = tds[1].get_text(strip=True)
+                klub_tekmovalca = clean_club(tds[2].get_text())
+
+                # uporaba originalne logike stolpcev (brez spreminjanja)
+                if tip == "Dvorana":
+                    if len(tds) >= 6:
+                        rezultat = tds[5].get_text(strip=True)
+                    else:
+                        print(f"❌ Premalo stolpcev za Dvorano: {len(tds)}")
+                        continue
+                elif tip == "Tarčno":
+                    if len(tds) < 8:
+                        print("❌ Napačno število stolpcev za Tarčno:", len(tds))
+                        print([td.get_text(strip=True) for td in tds])
+                        continue
+                    rezultat = tds[5].get_text(strip=True)
+                else:
+                    if len(tds) >= 5:
+                        rezultat = tds[4].get_text(strip=True)
+                    else:
+                        print(f"❌ Premalo stolpcev za {tip}: {len(tds)}")
+                        continue
+
+                klub_tekmovalca = normaliziraj_klub(klub_tekmovalca) or klub_tekmovalca
+
+                # 4. Shrani rezultat, če gre za slovenski klub
+                if re.match(r"^\d{3}", klub_tekmovalca):
+                    data.append({
+                        "Tekmovanje": ime_tekme or "Neznano tekmovanje",
+                        "Organizator": klub or "",
+                        "Lokacija": lokacija or "",
+                        "Datum": datum or "",
+                        "Kategorija": current_category,
+                        "Mesto": mesto,
+                        "Tekmovalec": tekmovalec,
+                        "Klub": klub_tekmovalca,
+                        "Rezultat": rezultat,
+                        "Tip": tip
+                    })
+                else:
+                    print("⚠️ Klub ni v LZS: " + klub_tekmovalca)
+
+    print(f"✅ Najdenih rezultatov: {len(data)}")
+    return data
+
+
+
 
 
 def main():
