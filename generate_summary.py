@@ -256,6 +256,7 @@ def generiraj_povzetek_za_tip_final(izbran_tip):
         for tekmovalec, podatki in tekmovalci.items():
             tekme = podatki['tekme']
             if len(tekme) == len(tekme_sorted):
+                print("--- vse ima ---")
                 # poišči najslabšo tekmo: najmanj točk, pri enakih točkah najmanj krogi
                 naj_slabša_tekma = min(
                     tekme.items(),
@@ -355,7 +356,7 @@ def generiraj_povzetek_za_tip_final(izbran_tip):
 
 
 def main(tp, frtk):
-    # print(f"tip = {tp}, fertik = {frtk}")
+    print(f"tip = {tp}, fertik = {frtk}")
     if frtk:
         print("po novem")
         generiraj_povzetek_za_tip_final(tp)

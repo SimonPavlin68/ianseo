@@ -55,7 +55,6 @@ def parse_competition_info(html_text):
         return None, None, None, None
 
     ime_tekme = divs[0].get_text(strip=True)
-
     drugi_div = divs[1]
     deli_teksta = drugi_div.decode_contents().split("<br/>")
     deli_teksta = [BeautifulSoup(s, "html.parser").get_text(strip=True) for s in deli_teksta if s.strip()]
@@ -89,7 +88,9 @@ def parse_competition_info(html_text):
                 datum = datum_raw
         else:
             lokacija = raw
-
+        # Gradac -jebemoboga !!!
+        if "Slovenia" in lokacija:
+            lokacija = lokacija.replace("Slovenia", "").strip()
     return ime_tekme, klub, lokacija, datum
 
 
