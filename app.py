@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for, session, flash, make_response, send_from_directory
+from flask import Flask, render_template, request, send_file, redirect, url_for, session, flash, make_response, \
+    send_from_directory
 import json
 import subprocess
 import scraper
 import csv
-from config import COMPETITIONS_PATH, USERS_PATH, CATEGORIES_PATH, EXCLUDED_CATEGORIES_PATH, DEFAULT_MIN_REZULTAT_ZA_TOCKE
+from config import COMPETITIONS_PATH, USERS_PATH, CATEGORIES_PATH, EXCLUDED_CATEGORIES_PATH, \
+    DEFAULT_MIN_REZULTAT_ZA_TOCKE
 import logging
 import pandas as pd
 import pdfkit
@@ -13,6 +15,7 @@ import base64
 from utils import nalozi_normalizacijo_datoteko, nalozi_popravke_tekmovalcev_datoteko, load_min_tocke, save_min_tocke
 from utils import POKALSKI_NASLOVI
 import tempfile
+import datetime
 
 logging.basicConfig(filename='record.log', level=logging.DEBUG)
 
@@ -150,7 +153,8 @@ def index():
                 json.dump(tekme, f, ensure_ascii=False, indent=2)
             tekme = pridobi_tekme_iz_jsona()
     izbran_tip = session.get("zadnji_tab", "AH")
-    return render_template("index.html", tekme=tekme, povzetek_ustvarjen=povzetek_ustvarjen, output=output, izbran_tip=izbran_tip)
+    return render_template("index.html", tekme=tekme, povzetek_ustvarjen=povzetek_ustvarjen, output=output,
+                           izbran_tip=izbran_tip)
 
 
 @app.route("/summary")
@@ -285,10 +289,8 @@ def shrani_normalizacijo_tekmovalcev():
     return redirect(url_for("settings"))
 
 
-
 @app.route("/update_min_tocke", methods=["POST"])
 def update_min_tocke():
-
     action = request.form.get("action", "save")
 
     if action == "reset":
@@ -338,6 +340,7 @@ def odstrani_stevilko(text):
     else:
         return text  # če ni pomišljaja, vrni celoten niz
 
+
 @app.route('/pdf')
 def generate_pdf():
     izbran_tab = request.args.get('izbran_tab', default="AH")
@@ -386,7 +389,7 @@ def generate_pdf():
     logo_path = os.path.join(app.root_path, 'static', 'images', 'logo.png')
     logo_base64 = get_base64_image(logo_path)
 
-    # Preberi tekme iz datoteke tekme_{izbran_tip}.csv
+    # Preberi tekme iz datoteke tekme_{izbran_tab}.csv
     tekme = []
     with open(f"tekme_{izbran_tab}.csv", encoding="utf-8-sig") as f:
         reader = csv.reader(f)
@@ -400,7 +403,6 @@ def generate_pdf():
         tekme_html += f"<li>{t}</li>"
     tekme_html += "</ul>"
 
-    tekme_not = []
     tekme_html_not = ""
     filename = f"tekme_{izbran_tab}_not.json"
     if os.path.exists(filename):
@@ -412,13 +414,26 @@ def generate_pdf():
             tekme_html_not += f"<li>{tc}</li>"
         tekme_html_not += "</ul>"
 
+    # Pridobi trenutni datum
+    from datetime import datetime
+    current_date = datetime.now().strftime("%d.%m.%Y")
+
+    # HTML footer
+    footer_html = f"""
+    <div style="text-align: left; font-size: 10px; color: gray; margin-left: 10px;">
+        &#169; LZS - {current_date}
+    </div>
+    """
+
     # Render HTML template in pošlji v pdfkit za PDF generacijo
     rendered = render_template('report_klubi.html',
                                naslov=naslov,
                                table_html=table_html,
                                tekme_html=tekme_html,
                                tekme_html_not=tekme_html_not,
-                               logo_base64=logo_base64)
+                               logo_base64=logo_base64,
+                               footer_html=footer_html)  # Dodan footer
+
     # Nastavi pot do wkhtmltopdf.exe - popravi, če ni v PATH
     config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
     pdf = pdfkit.from_string(rendered, False, configuration=config)
@@ -501,27 +516,39 @@ def generate_pdf_posamezno():
         tmp_header.write(header_html)
         header_file_path = tmp_header.name
 
+    # Ustvari HTML za footer
+    current_date = datetime.datetime.now().strftime("%d.%m.%Y")
+    footer_html = f"""<div style="text-align: left; font-size: 10px; color: gray; margin-left: 10px; ">&#169; LZS - {current_date}</div>"""
+
+    # Ustvari začasno datoteko za footer
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".html", mode="w", encoding="utf-8") as tmp_footer:
+        tmp_footer.write(footer_html)
+        footer_file_path = tmp_footer.name
+
     # Nastavitve za PDF
     options = {
         'page-size': 'A4',
         'orientation': 'Landscape',
         'encoding': "UTF-8",
         'header-html': header_file_path,
+        'footer-html': footer_file_path,  # Dodaj footer HTML
         'margin-top': '30mm',
         'header-spacing': '5',
+        'footer-spacing': '5',
     }
 
     # Generiraj PDF
     try:
         config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
         pdf = pdfkit.from_string(rendered, False, configuration=config, options=options)
-        # pdf = pdfkit.from_string(rendered, False, options=options)
     except Exception as e:
         os.remove(header_file_path)
+        os.remove(footer_file_path)
         return f"Napaka pri generiranju PDF: {e}"
 
     # Počisti začasno datoteko
     os.remove(header_file_path)
+    os.remove(footer_file_path)
 
     # Odgovor
     response = make_response(pdf)

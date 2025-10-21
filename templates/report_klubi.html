@@ -47,6 +47,15 @@ th {
   font-weight: bold;
   margin-left: 100px;
 }
+
+/* Footer nastavitve */
+.footer {
+    text-align: left;
+    font-size: 10px;
+    color: gray;
+    padding-left: 10px;
+    margin-top: 80px;
+}
     </style>
 </head>
 <body>
@@ -61,5 +70,9 @@ th {
     <h3>Preostala tekmovanja</h3>
     {{ tekme_html_not|safe }}
     {% endif %}
+<!-- Footer -->
+    <div class="footer">
+        {{ footer_html | safe }}
+    </div>
 </body>
 </html>
