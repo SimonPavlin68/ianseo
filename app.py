@@ -456,7 +456,7 @@ def generate_pdf_posamezno():
 
     if os.path.exists(final_csv_filename):
         csv_filename = final_csv_filename
-        naslov += " (končno stanje)"  # dodamo oznako v naslov
+        naslov += " (končno stanje)"
     else:
         csv_filename = regular_csv_filename
 
@@ -480,7 +480,7 @@ def generate_pdf_posamezno():
     if trenutna_skupina:
         skupine.append(trenutna_skupina)
 
-    # Čiščenje podatkov
+    # Čiščenje podatkov in sortiranje po datumu
     skupine_render = []
     for ime, tabela in skupine:
         if not tabela:
@@ -490,10 +490,25 @@ def generate_pdf_posamezno():
         except ValueError:
             klub_idx = -1
 
+        try:
+            datum_idx = tabela[0].index("Datum")
+        except ValueError:
+            datum_idx = -1
+
+        # Odstrani številke iz kluba
         if klub_idx != -1:
             for vrstica in tabela[1:]:
                 if len(vrstica) > klub_idx:
                     vrstica[klub_idx] = odstrani_stevilko(vrstica[klub_idx])
+
+        # Sortiranje po datumu
+        if datum_idx != -1:
+            def parse_datum(vrstica):
+                try:
+                    return datetime.datetime.strptime(vrstica[datum_idx], "%d.%m.%Y")
+                except:
+                    return datetime.datetime.min
+            tabela[1:] = sorted(tabela[1:], key=parse_datum)
 
         skupine_render.append((ime, tabela))
 
@@ -510,34 +525,32 @@ def generate_pdf_posamezno():
         logo_base64=logo_base64
     )
 
-    # Ustvari začasno datoteko za header
+    # Začasna datoteka za header
     with tempfile.NamedTemporaryFile(delete=False, suffix=".html", mode="w", encoding="utf-8") as tmp_header:
         header_html = render_template("pdf_header.html", logo_base64=logo_base64, naslov=naslov)
         tmp_header.write(header_html)
         header_file_path = tmp_header.name
 
-    # Ustvari HTML za footer
+    # Footer
     current_date = datetime.datetime.now().strftime("%d.%m.%Y")
-    footer_html = f"""<div style="text-align: left; font-size: 10px; color: gray; margin-left: 10px; ">&#169; LZS - {current_date}</div>"""
-
-    # Ustvari začasno datoteko za footer
+    footer_html = f"""<div style="text-align: left; font-size: 10px; color: gray; margin-left: 10px;">&#169; LZS - {current_date}</div>"""
     with tempfile.NamedTemporaryFile(delete=False, suffix=".html", mode="w", encoding="utf-8") as tmp_footer:
         tmp_footer.write(footer_html)
         footer_file_path = tmp_footer.name
 
-    # Nastavitve za PDF
+    # Nastavitve PDF
     options = {
         'page-size': 'A4',
         'orientation': 'Landscape',
         'encoding': "UTF-8",
         'header-html': header_file_path,
-        'footer-html': footer_file_path,  # Dodaj footer HTML
+        'footer-html': footer_file_path,
         'margin-top': '30mm',
         'header-spacing': '5',
         'footer-spacing': '5',
     }
 
-    # Generiraj PDF
+    # Generiranje PDF
     try:
         config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
         pdf = pdfkit.from_string(rendered, False, configuration=config, options=options)
@@ -546,7 +559,7 @@ def generate_pdf_posamezno():
         os.remove(footer_file_path)
         return f"Napaka pri generiranju PDF: {e}"
 
-    # Počisti začasno datoteko
+    # Čiščenje začasnih datotek
     os.remove(header_file_path)
     os.remove(footer_file_path)
 
@@ -556,6 +569,7 @@ def generate_pdf_posamezno():
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = f'attachment; filename={filename}'
     return response
+
 
 
 @app.route("/login", methods=["GET", "POST"])

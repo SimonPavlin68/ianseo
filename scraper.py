@@ -165,7 +165,7 @@ def parse_competition_results_old(url, allowed_categories, tip):
 
                 klub_tekmovalca = normaliziraj_klub(klub_tekmovalca) or klub_tekmovalca
                 # 4. Shrani rezultat, če gre za slovenski klub
-                if re.match(r"^\d{3}", klub_tekmovalca):
+                if re.match(r"^\d{3} ", klub_tekmovalca):
                     data.append({
                         "Tekmovanje": ime_tekme or "Neznano tekmovanje",
                         "Organizator": klub or "",
@@ -281,7 +281,7 @@ def parse_competition_results(url, allowed_categories, tip):
                 klub_tekmovalca = normaliziraj_klub(klub_tekmovalca) or klub_tekmovalca
 
                 # 4. Shrani rezultat, če gre za slovenski klub
-                if re.match(r"^\d{3}", klub_tekmovalca):
+                if re.match(r"^\d{3} ", klub_tekmovalca):
                     data.append({
                         "Tekmovanje": ime_tekme or "Neznano tekmovanje",
                         "Organizator": klub or "",
@@ -306,6 +306,7 @@ def parse_competition_results(url, allowed_categories, tip):
 
 def main():
     clean_file("AH")  # TODO še ostalo
+    clean_file("Dvorana")  # TODO še ostalo
     with open(COMPETITIONS_PATH, "r", encoding="utf-8") as f:
         competitions = json.load(f)
 
