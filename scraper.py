@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import csv
 from config import COMPETITIONS_PATH, CATEGORIES_PATH, EXCLUDED_CATEGORIES_PATH
 from utils import normaliziraj_klub
+from collections import defaultdict, Counter
 
 
 def clean_club(text: str) -> str:
@@ -165,7 +166,7 @@ def parse_competition_results_old(url, allowed_categories, tip):
 
                 klub_tekmovalca = normaliziraj_klub(klub_tekmovalca) or klub_tekmovalca
                 # 4. Shrani rezultat, če gre za slovenski klub
-                if re.match(r"^\d{3} ", klub_tekmovalca):
+                if re.match(r"^\d{3}", klub_tekmovalca):
                     data.append({
                         "Tekmovanje": ime_tekme or "Neznano tekmovanje",
                         "Organizator": klub or "",
@@ -183,6 +184,7 @@ def parse_competition_results_old(url, allowed_categories, tip):
 
     print(f"✅ Najdenih rezultatov: {len(data)}")
     return data
+
 
 def parse_competition_results(url, allowed_categories, tip):
     resp = requests.get(url)
@@ -281,7 +283,7 @@ def parse_competition_results(url, allowed_categories, tip):
                 klub_tekmovalca = normaliziraj_klub(klub_tekmovalca) or klub_tekmovalca
 
                 # 4. Shrani rezultat, če gre za slovenski klub
-                if re.match(r"^\d{3} ", klub_tekmovalca):
+                if re.match(r"^\d{3}", klub_tekmovalca):
                     data.append({
                         "Tekmovanje": ime_tekme or "Neznano tekmovanje",
                         "Organizator": klub or "",
@@ -301,12 +303,23 @@ def parse_competition_results(url, allowed_categories, tip):
     return data
 
 
+def udeležba_po_tekmah(vsi_podatki):
+    po_tekmovanju = defaultdict(list)
 
+    for row in vsi_podatki:
+        tekma = row["Tekmovanje"]
+        klub = row["Klub"]
+        po_tekmovanju[tekma].append(klub)
+
+    statistik = {}
+    for tekma, klubi in po_tekmovanju.items():
+        statistik[tekma] = dict(Counter(klubi))
+
+    return statistik
 
 
 def main():
     clean_file("AH")  # TODO še ostalo
-    clean_file("Dvorana")  # TODO še ostalo
     with open(COMPETITIONS_PATH, "r", encoding="utf-8") as f:
         competitions = json.load(f)
 
@@ -369,6 +382,21 @@ def main():
     else:
         print("⚠️ Ni bilo rezultatov za združevanje.")
 
+    # 📊 STATISTIKA: udeležba klubov po tekmah
+    if all_results:
+        print("--- statistika ---")
+        stat = udeležba_po_tekmah(all_results)
+
+        # Shrani v CSV
+        with open("udelezba_po_tekmovanjih.csv", "w", encoding="utf-8-sig", newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["Tekmovanje", "Klub", "Udeležba"])
+
+            for tekma, klubi in stat.items():
+                for klub, st in klubi.items():
+                    writer.writerow([tekma, klub, st])
+
+        print("💾 Udeležba klubov shranjena v 'udelezba_po_tekmovanjih.csv'.")
 
 if __name__ == "__main__":
     main()

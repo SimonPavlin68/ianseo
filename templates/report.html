@@ -6,6 +6,17 @@
     <title>{{ naslov }}</title>
 
     <style>
+
+:root {
+  --barva-zelena: #aad18a;
+  --barva-rdeca: #f28b82;
+  --barva-modra: #a7c7e7;
+  --barva-vijolicna: #d7aefb;
+  --barva-rumena: #fff475;
+  --barva-siva: #f1f3f4;
+  --barva-tekst: #5f6368;
+}
+
 body {
     font-family: 'Arial';
     font-size: 10pt;
@@ -28,8 +39,7 @@ th, td {
 }
 
 th {
-    background-color1: #aad18a;
-    background-color: #998AFF;
+    background-color: #aad18a;
 }
 
     </style>
@@ -40,24 +50,30 @@ th {
                 <thead>
                   <!-- Vrstica z imenom skupine -->
                   <tr>
-                    <th colspan="3" style="text-align: left; font-weight: bold; font-size: 1.1em;">
-                      {{ ime_skupine }}
-                    </th>
+                    <th colspan="3" style="text-align: left; font-weight: bold; font-size: 1.1em;
+    {% if izbran_tip == '3D' %} background-color: #f28b82; {% else %} background-color: #aad18a; {% endif %}">
+    {{ ime_skupine }}
+</th>
+
                     {% for celica in tabela[0][3:] %}
-                      <th colspan="2" style="text-align: center;">{{ celica | safe }}</th>
+                      <th colspan="2" style="text-align: center;
+                          {% if izbran_tip == '3D' %} background-color: #f28b82; {% else %} background-color: #aad18a; {% endif %}">
+                          {{ celica | safe }}
+                      </th>
                     {% endfor %}
                   </tr>
 
                   <!-- Vrstica z 'krogi' in 'točke' -->
                   <tr>
-                    <th>Mesto</th>
-                    <th>Tekmovalec</th>
-                    <th>Klub</th>
-                    {% for celica in tabela[0][3:] %}
-                      <th>Krogi</th>
-                      <th>Točke</th>
-                    {% endfor %}
-                  </tr>
+  <th style="background-color: {{ '#f28b82' if izbran_tip == '3D' else '#aad18a' }}">Mesto</th>
+  <th style="background-color: {{ '#f28b82' if izbran_tip == '3D' else '#aad18a' }}">Tekmovalec</th>
+  <th style="background-color: {{ '#f28b82' if izbran_tip == '3D' else '#aad18a' }}">Klub</th>
+  {% for celica in tabela[0][3:] %}
+    <th style="background-color: {{ '#f28b82' if izbran_tip == '3D' else '#aad18a' }}">Krogi</th>
+    <th style="background-color: {{ '#f28b82' if izbran_tip == '3D' else '#aad18a' }}">Točke</th>
+  {% endfor %}
+</tr>
+
                 </thead>
                 <tbody>
   {% for vrstica in tabela[1:] %}

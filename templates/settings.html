@@ -51,6 +51,9 @@
 <div id="kategorije-tab" class="tab-vsebina active">
   <h2>Kategorija / Stil</h2>
   <form method="POST" action="{{ url_for('shrani_izlocene_kategorije') }}">
+  <button type="button" id="toggleBtn" onclick="toggleKategorije()">❌ Odkljukaj starejše</button>
+  <br><br>
+
 <table border="1" style="border-collapse: collapse; width: 100%;">
   <thead>
     <tr>
@@ -309,6 +312,35 @@ function zapriUrediFormoTekmovalca() {
 function odpriDodajFormoTekmovalca() {
   odpriUrediFormoTekmovalca('', '');
 }
+let stanjeToggle = false;
+
+function toggleKategorije() {
+  const posebne = ["Člani", "od 50", "od 13"];
+  // "od 50" lovi: "Starejši od 50 let", "Veterani od 50", ...
+  // "od 13" lovi: "Mlajši od 13 let", "U13", "od 13", ...
+
+  if (!stanjeToggle) {
+    // ODkljukamo posebne kategorije
+    document.querySelectorAll("tbody input[type='checkbox']").forEach(cb => {
+      const vrednost = cb.value.toLowerCase();
+      if (posebne.some(p => vrednost.includes(p.toLowerCase()))) {
+        cb.checked = false;
+      }
+    });
+
+    document.getElementById("toggleBtn").innerText = "✔️ Obkljukaj vse";
+    stanjeToggle = true;
+  } else {
+    // OBkljukamo vse
+    document.querySelectorAll("tbody input[type='checkbox']").forEach(cb => cb.checked = true);
+
+    document.getElementById("toggleBtn").innerText = "❌ Odkljukaj starejše";
+    stanjeToggle = false;
+  }
+
+  posodobiHeaderCheckboxe();
+}
+
 </script>
 </body>
 </html>

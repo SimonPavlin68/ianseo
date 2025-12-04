@@ -2,21 +2,21 @@
   {
     "info": "AH Snežnik",
     "url": "https://www.ianseo.net/TourData/2025/22064/IC.php",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon",
     "type": "AH"
   },
   {
     "info": "AH Gornji Grad",
     "url": "https://www.ianseo.net/TourData/2025/22787/IC.php",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon",
     "type": "AH"
   },
   {
     "info": "AH Vrhnika",
     "url": "https://www.ianseo.net/TourData/2025/23259/IC.php",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon",
     "type": "AH"
   },
@@ -37,7 +37,7 @@
   {
     "info": "AH Boč",
     "url": "https://www.ianseo.net/TourData/2025/23546/IC.php",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon",
     "type": "AH"
   },
@@ -73,14 +73,14 @@
     "info": "AH Turjak",
     "url": "https://www.ianseo.net/TourData/2025/24257/IC.php",
     "type": "AH",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon"
   },
   {
     "info": "AH Gradac",
     "url": "https://www.ianseo.net/TourData/2025/24894/IC.php",
     "type": "AH",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon"
   },
   {
