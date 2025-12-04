@@ -39,12 +39,16 @@ def popravi_ime(ime, popravki):
 
 
 def extract_date_from_competition_name(name):
+    print("--- bum ---")
+    print(name)
     parts = name.split("<br>")
-    if len(parts) == 2:
+    if len(parts) >= 2:
         try:
             return datetime.strptime(parts[1].strip(), "%d.%m.%Y")
         except ValueError:
+            print("--- exception ---")
             pass
+    print("--- jeba ---")
     return datetime.max  # če ni datuma, naj gre na konec
 
 

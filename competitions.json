@@ -23,14 +23,14 @@
   {
     "info": "3D Dolenjske toplice",
     "url": "https://www.ianseo.net/TourData/2025/23136/IC.php",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon",
     "type": "3D"
   },
   {
     "info": "3D Šujica",
     "url": "https://www.ianseo.net/TourData/2025/22406/IC.php",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon",
     "type": "3D"
   },
@@ -91,42 +91,42 @@
     "added_by": "simon"
   },
   {
-    "info": "Postojna 6.12.2025",
+    "info": "Postojna<br>6.12.2025",
     "url": "https://www.ianseo.net/TourData/2025/0/IC.php",
     "type": "Dvorana",
     "disabled": false,
     "added_by": "simon"
   },
   {
-    "info": "Kamnik 13.12.2025",
+    "info": "Kamnik<br>13.12.2025",
     "url": "https://www.ianseo.net/TourData/2025/0/IC.php",
     "type": "Dvorana",
     "disabled": false,
     "added_by": "simon"
   },
   {
-    "info": "Lendava 20.12.2025",
+    "info": "Lendava<br>20.12.2025",
     "url": "https://www.ianseo.net/TourData/2025/0/IC.php",
     "type": "Dvorana",
     "disabled": false,
     "added_by": "simon"
   },
   {
-    "info": "Ilirska Bistrica 10.1.2026",
+    "info": "Ilirska Bistrica<br>10.1.2026",
     "url": "https://www.ianseo.net/TourData/2025/0/IC.php",
     "type": "Dvorana",
     "disabled": false,
     "added_by": "simon"
   },
   {
-    "info": "Rakek 25.1.2026",
+    "info": "Rakek<br>25.1.2026",
     "url": "https://www.ianseo.net/TourData/2025/0/IC.php",
     "type": "Dvorana",
     "disabled": false,
     "added_by": "simon"
   },
   {
-    "info": "Šenčur 7.2.2026",
+    "info": "Šenčur<br>7.2.2026",
     "url": "https://www.ianseo.net/TourData/2025/0/IC.php",
     "type": "Dvorana",
     "disabled": false,

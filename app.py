@@ -15,7 +15,7 @@ import base64
 from utils import nalozi_normalizacijo_datoteko, nalozi_popravke_tekmovalcev_datoteko, load_min_tocke, save_min_tocke
 from utils import POKALSKI_NASLOVI
 import tempfile
-import datetime
+from datetime import datetime
 
 logging.basicConfig(filename='record.log', level=logging.DEBUG)
 
@@ -346,6 +346,13 @@ def generate_pdf():
     izbran_tab = request.args.get('izbran_tab', default="AH")
     naslov = POKALSKI_NASLOVI.get(izbran_tab, "-")
 
+    if izbran_tab == "3D":
+        barva = "#f28b82"  # rdeča
+    elif izbran_tab == "Dvorana":
+        barva = "#b5b5ed"  # modra
+    else:
+        barva = "#aad18a"  # zelena
+
     # Preveri, ali obstaja končni povzetek po klubih
     final_csv_filename = f'povzetek_klubi_{izbran_tab}_final.csv'
     regular_csv_filename = f'povzetek_klubi_{izbran_tab}.csv'
@@ -385,6 +392,7 @@ def generate_pdf():
 
     # Pretvori celoten DataFrame v HTML tabelo brez indeksa
     table_html = df.to_html(index=False, classes='table table-striped', border=0, escape=False)
+    table_html = table_html.replace('<th>', f'<th style="background-color:{barva};">')
     # Logo v base64 za prikaz v HTML
     logo_path = os.path.join(app.root_path, 'static', 'images', 'logo.png')
     logo_base64 = get_base64_image(logo_path)
@@ -415,13 +423,13 @@ def generate_pdf():
         tekme_html_not += "</ul>"
 
     # Pridobi trenutni datum
-    from datetime import datetime
-    current_date = datetime.now().strftime("%d.%m.%Y")
+    # current_date = datetime.now().strftime("%d.%m.%Y")
+    current_date = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
 
     # HTML footer
     footer_html = f"""
     <div style="text-align: left; font-size: 10px; color: gray; margin-left: 10px;">
-        &#169; LZS - {current_date}
+        &#169; LZS - generirano: {current_date}
     </div>
     """
 
@@ -516,13 +524,20 @@ def generate_pdf_posamezno():
     logo_path = os.path.join(app.root_path, 'static', 'images', 'logo.png')
     logo_base64 = get_base64_image(logo_path)
 
+    if izbran_tab == "3D":
+        barva = "#f28b82"  # rdeča
+    elif izbran_tab == "Dvorana":
+        barva = "#b5b5ed"  # modra
+    else:
+        barva = "#aad18a"  # zelena
     # HTML vsebina
     rendered = render_template(
         "report.html",
         naslov=naslov,
         skupine=skupine_render,
         izbran_tip=izbran_tab,
-        logo_base64=logo_base64
+        logo_base64=logo_base64,
+        barva_th=barva
     )
 
     # Začasna datoteka za header
@@ -532,8 +547,9 @@ def generate_pdf_posamezno():
         header_file_path = tmp_header.name
 
     # Footer
-    current_date = datetime.datetime.now().strftime("%d.%m.%Y")
-    footer_html = f"""<div style="text-align: left; font-size: 10px; color: gray; margin-left: 10px;">&#169; LZS - {current_date}</div>"""
+    # current_date = datetime.datetime.now().strftime("%d.%m.%Y")
+    current_date = datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+    footer_html = f"""<div style="text-align: left; font-size: 12px; color: gray; margin-left: 10px;">&#169; LZS - generirano: {current_date}</div>"""
     with tempfile.NamedTemporaryFile(delete=False, suffix=".html", mode="w", encoding="utf-8") as tmp_footer:
         tmp_footer.write(footer_html)
         footer_file_path = tmp_footer.name
@@ -569,7 +585,6 @@ def generate_pdf_posamezno():
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = f'attachment; filename={filename}'
     return response
-
 
 
 @app.route("/login", methods=["GET", "POST"])

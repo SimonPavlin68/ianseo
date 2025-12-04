@@ -14,8 +14,6 @@ def clean_club(text: str) -> str:
 
 
 def handle_not_jet(comp):
-    print("klekla!!! " + comp['info'])
-
     info = comp['info']
     parts = [p.strip() for p in info.split(",", 1)]
     tekmovanje = parts[0] if parts else ""
@@ -166,7 +164,7 @@ def parse_competition_results_old(url, allowed_categories, tip):
 
                 klub_tekmovalca = normaliziraj_klub(klub_tekmovalca) or klub_tekmovalca
                 # 4. Shrani rezultat, če gre za slovenski klub
-                if re.match(r"^\d{3}", klub_tekmovalca):
+                if re.match(r"^\d{3} ", klub_tekmovalca):
                     data.append({
                         "Tekmovanje": ime_tekme or "Neznano tekmovanje",
                         "Organizator": klub or "",
@@ -281,9 +279,9 @@ def parse_competition_results(url, allowed_categories, tip):
                         continue
 
                 klub_tekmovalca = normaliziraj_klub(klub_tekmovalca) or klub_tekmovalca
-
+                print(klub_tekmovalca)
                 # 4. Shrani rezultat, če gre za slovenski klub
-                if re.match(r"^\d{3}", klub_tekmovalca):
+                if re.match(r"^\d{3} ", klub_tekmovalca):
                     data.append({
                         "Tekmovanje": ime_tekme or "Neznano tekmovanje",
                         "Organizator": klub or "",
@@ -320,6 +318,8 @@ def udeležba_po_tekmah(vsi_podatki):
 
 def main():
     clean_file("AH")  # TODO še ostalo
+    clean_file("Dvorana")
+    clean_file("3D")
     with open(COMPETITIONS_PATH, "r", encoding="utf-8") as f:
         competitions = json.load(f)
 
