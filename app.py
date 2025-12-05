@@ -548,7 +548,7 @@ def generate_pdf_posamezno():
 
     # Footer
     # current_date = datetime.datetime.now().strftime("%d.%m.%Y")
-    current_date = datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+    current_date = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
     footer_html = f"""<div style="text-align: left; font-size: 12px; color: gray; margin-left: 10px;">&#169; LZS - generirano: {current_date}</div>"""
     with tempfile.NamedTemporaryFile(delete=False, suffix=".html", mode="w", encoding="utf-8") as tmp_footer:
         tmp_footer.write(footer_html)

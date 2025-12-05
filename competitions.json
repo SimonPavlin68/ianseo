@@ -23,14 +23,14 @@
   {
     "info": "3D Dolenjske toplice",
     "url": "https://www.ianseo.net/TourData/2025/23136/IC.php",
-    "disabled": false,
+    "disabled": true,
     "added_by": "simon",
     "type": "3D"
   },
   {
     "info": "3D Šujica",
     "url": "https://www.ianseo.net/TourData/2025/22406/IC.php",
-    "disabled": false,
+    "disabled": true,
     "added_by": "simon",
     "type": "3D"
   },
