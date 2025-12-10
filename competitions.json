@@ -23,14 +23,14 @@
   {
     "info": "3D Dolenjske toplice",
     "url": "https://www.ianseo.net/TourData/2025/23136/IC.php",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon",
     "type": "3D"
   },
   {
     "info": "3D Šujica",
     "url": "https://www.ianseo.net/TourData/2025/22406/IC.php",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon",
     "type": "3D"
   },
@@ -44,7 +44,7 @@
   {
     "info": "3D Lendava",
     "url": "https://www.ianseo.net/TourData/2025/22168/IC.php",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon",
     "type": "3D"
   },
@@ -66,7 +66,7 @@
     "info": "3D Hmeljček",
     "url": "https://www.ianseo.net/TourData/2025/23865/IC.php",
     "type": "3D",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon"
   },
   {
@@ -87,12 +87,12 @@
     "info": "3D Bohinjska Bela",
     "url": "https://www.ianseo.net/TourData/2025/24576/IC.php",
     "type": "3D",
-    "disabled": true,
+    "disabled": false,
     "added_by": "simon"
   },
   {
-    "info": "Postojna<br>6.12.2025",
-    "url": "https://www.ianseo.net/TourData/2025/0/IC.php",
+    "info": "Postojna",
+    "url": "https://www.ianseo.net/TourData/2025/25600/IC.php",
     "type": "Dvorana",
     "disabled": false,
     "added_by": "simon"

@@ -8,17 +8,6 @@ from datetime import datetime
 from utils import normaliziraj_klub, nalozi_popravke_tekmovalcev_datoteko
 
 
-# def nalozi_popravke(path):
-#     popravki = {}
-#     with open(path, encoding='utf-8-sig') as f:
-#         reader = csv.DictReader(f)
-#         for row in reader:
-#            napačno = row['napačno'].strip().upper()
-#            pravilno = row['pravilno'].strip()
-#            popravki[napačno] = pravilno
-#     return popravki
-
-
 def capitalize_ime(ime):
     return ' '.join(beseda.capitalize() for beseda in ime.strip().split())
 
@@ -39,8 +28,6 @@ def popravi_ime(ime, popravki):
 
 
 def extract_date_from_competition_name(name):
-    print("--- bum ---")
-    print(name)
     parts = name.split("<br>")
     if len(parts) >= 2:
         try:
@@ -48,7 +35,6 @@ def extract_date_from_competition_name(name):
         except ValueError:
             print("--- exception ---")
             pass
-    print("--- jeba ---")
     return datetime.max  # če ni datuma, naj gre na konec
 
 
@@ -181,7 +167,11 @@ def generiraj_povzetek_za_tip(izbran_tip):
         writer.writerow(['Uvrstitev', 'Klub', 'Število tekmovalcev', 'Krogi', 'Točke'])
 
         # Nato podatki
-        sortirani_klubi = sorted(klubi_summary.items(), key=lambda x: x[1]['skupaj_točke'], reverse=True)
+        sortirani_klubi = sorted(
+            klubi_summary.items(),
+            key=lambda x: (x[1]['skupaj_točke'], x[1]['skupaj_krogi']),
+            reverse=True
+        )
         for mesto, (klub, podatki) in enumerate(sortirani_klubi, start=1):
             writer.writerow([
                 mesto,

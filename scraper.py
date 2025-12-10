@@ -90,6 +90,8 @@ def parse_competition_info(html_text):
         # Gradac -jebemoboga !!!
         if "Slovenia" in lokacija:
             lokacija = lokacija.replace("Slovenia", "").strip()
+        if lokacija == "Športna dvorana srednje šole Postojna":
+            lokacija = "Postojna"
     return ime_tekme, klub, lokacija, datum
 
 
@@ -279,7 +281,7 @@ def parse_competition_results(url, allowed_categories, tip):
                         continue
 
                 klub_tekmovalca = normaliziraj_klub(klub_tekmovalca) or klub_tekmovalca
-                print(klub_tekmovalca)
+                # print(klub_tekmovalca)
                 # 4. Shrani rezultat, če gre za slovenski klub
                 if re.match(r"^\d{3} ", klub_tekmovalca):
                     data.append({
