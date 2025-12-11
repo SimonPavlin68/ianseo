@@ -341,17 +341,23 @@ def odstrani_stevilko(text):
         return text  # če ni pomišljaja, vrni celoten niz
 
 
+def get_color_from_type(typ: str):
+    if typ == "3D":
+        clr = "#f28b82"  # rdeča
+    elif typ == "Dvorana":
+        # clr = "#b5b5ed"  # modra
+        clr = "#A6C9E2"
+    else:
+        clr = "#aad18a"  # zelena
+    return clr
+
+
 @app.route('/pdf')
 def generate_pdf():
     izbran_tab = request.args.get('izbran_tab', default="AH")
     naslov = POKALSKI_NASLOVI.get(izbran_tab, "-")
 
-    if izbran_tab == "3D":
-        barva = "#f28b82"  # rdeča
-    elif izbran_tab == "Dvorana":
-        barva = "#b5b5ed"  # modra
-    else:
-        barva = "#aad18a"  # zelena
+    barva = get_color_from_type(izbran_tab)
 
     # Preveri, ali obstaja končni povzetek po klubih
     final_csv_filename = f'povzetek_klubi_{izbran_tab}_final.csv'
@@ -524,12 +530,8 @@ def generate_pdf_posamezno():
     logo_path = os.path.join(app.root_path, 'static', 'images', 'logo.png')
     logo_base64 = get_base64_image(logo_path)
 
-    if izbran_tab == "3D":
-        barva = "#f28b82"  # rdeča
-    elif izbran_tab == "Dvorana":
-        barva = "#b5b5ed"  # modra
-    else:
-        barva = "#aad18a"  # zelena
+    barva = get_color_from_type(izbran_tab)
+
     # HTML vsebina
     rendered = render_template(
         "report.html",
