@@ -443,7 +443,7 @@ def generate_pdf():
     rendered = render_template('report_klubi.html',
                                naslov=naslov,
                                table_html=table_html,
-                               tekme_html=tekme_html,
+                               # tekme_html=tekme_html,
                                tekme_html_not=tekme_html_not,
                                logo_base64=logo_base64,
                                footer_html=footer_html)  # Dodan footer

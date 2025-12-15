@@ -68,8 +68,8 @@ th {
       <img src="data:image/png;base64,{{ logo_base64 }}" class="logo" alt="Logo">
       <div class="naslov">{{ naslov }}</div>
     </div>
-        {{ table_html|safe }}
-    <h3>Vsa tekmovanja</h3>
+    {{ table_html|safe }}
+    <!--h3>Vsa tekmovanja</h3-->
     {{ tekme_html|safe }}
     {% if tekme_html_not|length > 0 %}
     <h3>Preostala tekmovanja</h3>
