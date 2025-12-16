@@ -10,6 +10,12 @@ pip install requests
 
 pip install Flask
 
+pip install odfpy
+
+pip install openpyxl
+
+pip install lxml
+
 
 
 pip freeze > requirements.txt
