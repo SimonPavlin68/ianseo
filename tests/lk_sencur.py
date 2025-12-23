@@ -45,7 +45,7 @@ def main():
         })
 
         # Izpis prvih mest (prvih tekmovalcev in tekmovanj) za vsak tip
-        print(f"\nPrvi tekmovalci za Tip: {tip}")
+        print(f"\nPrvo mesto: {tip}")
         if not prvi_tekmovalci:  # Preveri, če so zmagovalci
             print(" - Ni prvih mest")
         else:
