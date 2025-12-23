@@ -94,6 +94,8 @@ def parse_competition_info(html_text):
             lokacija = "Postojna"
         if lokacija == "Športna dvorana Kamnik":
             lokacija = "Kamnik"
+        if lokacija == "Telovadnica srednje šole Lendava":
+            lokacija = "Lendava"
     return ime_tekme, klub, lokacija, datum
 
 

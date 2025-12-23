@@ -120,10 +120,11 @@ def index():
             info = request.form.get("info")
             stevilo = request.form.get("id_tekmovanja")
             type = request.form.get("type")
+            season = request.form.get("season")
             if info and stevilo.isdigit():
                 url = f"https://www.ianseo.net/TourData/2025/{stevilo}/IC.php"
                 disabled = not bool(request.form.get("active"))  # Če kljukica ni obkljukana → disabled=True
-                dodaj_tekmo({"info": info, "url": url, "type": type, "disabled": disabled})
+                dodaj_tekmo({"info": info, "url": url, "type": type, "season": season, "disabled": disabled})
                 return redirect(url_for("index"))
         elif "izbrisi_tekmo" in request.form:
             izbrisi_info = request.form.get("izbrisi_tekmo")
@@ -137,6 +138,7 @@ def index():
             old_info = request.form.get("old_info")
             new_info = request.form.get("info")
             new_type = request.form.get("type")
+            new_season = request.form.get("season")
             new_id = request.form.get("id_tekmovanja")
             new_url = f"https://www.ianseo.net/TourData/2025/{new_id}/IC.php"
             disabled = not bool(request.form.get("active"))
@@ -145,6 +147,7 @@ def index():
                     tekma["info"] = new_info
                     tekma["url"] = new_url
                     tekma["type"] = new_type
+                    tekma["season"] = new_season
                     tekma["disabled"] = disabled
                     tekma["added_by"] = session.get("username", "-")
                     break
@@ -155,6 +158,32 @@ def index():
     izbran_tip = session.get("zadnji_tab", "AH")
     return render_template("index.html", tekme=tekme, povzetek_ustvarjen=povzetek_ustvarjen, output=output,
                            izbran_tip=izbran_tip)
+
+
+@app.route("/toggle", methods=["POST"])
+def toggle():
+    tekme = pridobi_tekme_iz_jsona()
+    tekma_url = request.form.get("toggle_tekmo")  # dobimo URL tekme
+
+    # checkbox bo poslan le, če je checked
+    checkbox_checked = "enabled" in request.form  # ime checkboxa mora biti 'enabled'
+
+    # nastavitev disabled
+    disabled = not checkbox_checked  # če je checked → disabled = False
+
+    # poiščemo tekmo in posodobimo disabled
+    for tekma in tekme:
+        if tekma["url"] == tekma_url:
+            tekma["disabled"] = disabled
+            tekma["added_by"] = session.get("username", "-")  # opcijsko, beleženje
+            break
+
+    # shranimo nazaj v JSON
+    with open(COMPETITIONS_PATH, "w", encoding="utf-8") as f:
+        json.dump(tekme, f, ensure_ascii=False, indent=2)
+
+    # redirect na glavno stran ali drugo stran
+    return redirect(url_for("index"))
 
 
 @app.route("/summary")

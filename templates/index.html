@@ -103,6 +103,7 @@
                 <th>Opis</th>
                 <th>Povezava</th>
                 <th>Tip</th>
+                <th>Sezona</th>
                 <th>Dodal</th>
                 <th style="width: 40px; text-align: center;">Aktivno</th>
                 <th style="width: 40px; text-align: center;">&nbsp;</th>
@@ -114,9 +115,15 @@
                 <td>{{ row.info }}</td>
                 <td><a href="{{ row.url }}" target="_blank">Odpri Ianseo</a></td>
                 <td>{{ row.type }}</td>
+                <td>{{ row.season }}</td>
                 <td>{{ row.added_by|capitalize or "-" }}</td>
                 <td style="text-align: center;">
-                    <input type="checkbox" disabled {% if not row.disabled %}checked{% endif %}>
+                    <!--input type="checkbox" disabled {% if not row.disabled %}checked{% endif %}-->
+                    <form method="POST" action="/toggle">
+                        <input type="hidden" name="toggle_tekmo" value="{{ row.url }}">
+                        <input type="checkbox" name="enabled" {% if not row.disabled %}checked{% endif %}
+                            onchange="this.form.submit()">
+                    </form>
                 </td>
                 <td style="white-space: nowrap; width: 80px;">
                     <div style="display: flex; gap: 6px;">
@@ -184,6 +191,13 @@
             <input type="text" id="id_tekmovanja" name="id_tekmovanja" pattern="\d+" required style="width: 100%; margin-bottom: 1em;"><br>
             <label for="type">Tip tekme:</label>
             <select name="type" id="type" required></select><br><br>
+            <!-- NOVO: sezona -->
+            <label for="season">Sezona:</label><br>
+            <select name="season" id="season" required
+                    style="width: 100%; margin-bottom: 1em;">
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+            </select><br>
             <label><input type="checkbox" name="active" checked> Tekma je aktivna</label><br><br>
             <button type="submit" name="dodaj_tekmo" class="button">➕ Dodaj tekmo</button>
         </form>
@@ -239,6 +253,11 @@ function krnekiEnEdit(item) {
     document.querySelector("input[name='old_info']").value = item.info || "";
     document.querySelector("input[name='active']").checked = !item.disabled;
     document.querySelector("select[name='type']").value = item.type;
+    // Nastavi dropdown za season
+    const seasonSelect = document.querySelector("select[name='season']");
+    if (seasonSelect && item.season) {
+        seasonSelect.value = item.season;  // uporablja item.season
+    }
 
     // Nastavi gumb na "spremeni"
     const btn = document.querySelector("#addCompetitionForm button[type='submit']");
@@ -385,6 +404,19 @@ document.addEventListener('DOMContentLoaded', () => {
     selectElement.value = izbranTip;
   }
 });
+
+
+function toggleDisabled(url, isChecked) {
+    fetch('/toggle_tekma', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({url: url, disabled: !isChecked})
+    }).then(resp => resp.json())
+      .then(data => {
+          if (!data.success) alert('Napaka pri spremembi');
+          else location.reload();  // osveži stran, če želiš
+      });
+}
 
 </script>
 </body>
