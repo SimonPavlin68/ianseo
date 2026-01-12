@@ -90,7 +90,7 @@ def parse_competition_info(html_text):
         # Gradac -jebemoboga !!!
         if "Slovenia" in lokacija:
             lokacija = lokacija.replace("Slovenia", "").strip()
-        if lokacija == "Športna dvorana srednje šole Postojna":
+        if "Postojna" in lokacija:
             lokacija = "Postojna"
         if lokacija == "Športna dvorana Kamnik":
             lokacija = "Kamnik"

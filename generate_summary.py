@@ -51,6 +51,7 @@ def generiraj_povzetek_za_tip(izbran_tip):
     popravki_imen = nalozi_popravke_tekmovalcev_datoteko()
 
     with open("rezultati_filtrirani.csv", encoding='utf-8-sig') as f:
+        zacetne_kategorije = {}
         reader = csv.DictReader(f)
         for row in reader:
             tip = row['Tip'].strip()
@@ -71,6 +72,19 @@ def generiraj_povzetek_za_tip(izbran_tip):
             klub_raw = row['Klub'].strip()
             klub = normaliziraj_klub(klub_raw)
             all_competitions.add(tekmovanje)
+            # Shrani začetno kategorijo, ali preveri skladnost
+            prejsnja_kategorija = zacetne_kategorije.get(tekmovalec)
+
+            trenutna_kategorija = (slog, kategorija)
+
+            if prejsnja_kategorija is None:
+                zacetne_kategorije[tekmovalec] = trenutna_kategorija
+            elif prejsnja_kategorija != trenutna_kategorija:
+                print(
+                    f"⚠️ {tekmovalec} nastopa v več kategorijah: {prejsnja_kategorija} -> {trenutna_kategorija}. Preskočeno.")
+                print(f"tekmovanje {tekmovanje}")
+                continue  # preskoči ta vnos, ker ni v "pravi" kategoriji
+
             raw_results[(slog, kategorija)][tekmovanje].append((tekmovalec, klub, rezultat))
 
     točkovanje = [25, 20, 15, 12] + list(range(11, 0, -1))
@@ -185,8 +199,6 @@ def generiraj_povzetek_za_tip(izbran_tip):
 
 
 def generiraj_povzetek_za_tip_final(izbran_tip):
-    from collections import defaultdict
-    import csv
 
     results = defaultdict(lambda: defaultdict(lambda: {
         'klub': '',

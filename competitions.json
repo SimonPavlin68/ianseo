@@ -103,6 +103,14 @@
     "added_by": "simon",
     "season": 2025
   },
+    {
+    "info": "Ajdovščina 2025",
+    "url": "https://www.ianseo.net/TourData/2025/25409/IC.php",
+    "type": "Dvorana",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
   {
     "info": "Postojna 2025",
     "url": "https://www.ianseo.net/TourData/2025/25600/IC.php",
@@ -128,8 +136,8 @@
     "season": "2026"
   },
   {
-    "info": "Ilirska Bistrica<br>10.1.2026",
-    "url": "https://www.ianseo.net/TourData/2025/0/IC.php",
+    "info": "Ilirska Bistrica 2026",
+    "url": "https://www.ianseo.net/TourData/2026/26151/IC.php",
     "type": "Dvorana",
     "disabled": false,
     "added_by": "simon",
@@ -137,7 +145,7 @@
   },
   {
     "info": "Rakek<br>25.1.2026",
-    "url": "https://www.ianseo.net/TourData/2025/0/IC.php",
+    "url": "https://www.ianseo.net/TourData/2026/1/IC.php",
     "type": "Dvorana",
     "disabled": false,
     "added_by": "simon",
@@ -145,7 +153,7 @@
   },
   {
     "info": "Šenčur<br>7.2.2026",
-    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "url": "https://www.ianseo.net/TourData/2026/2/IC.php",
     "type": "Dvorana",
     "disabled": false,
     "added_by": "simon",
@@ -181,14 +189,6 @@
     "type": "Dvorana",
     "season": "2025",
     "disabled": true,
-    "added_by": "simon"
-  },
-  {
-    "info": "Ajdovščina 2025",
-    "url": "https://www.ianseo.net/TourData/2025/25409/IC.php",
-    "type": "Dvorana",
-    "season": "2026",
-    "disabled": false,
     "added_by": "simon"
   }
 ]
