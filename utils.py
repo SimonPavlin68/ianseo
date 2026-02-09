@@ -43,7 +43,7 @@ def normaliziraj_klub(klub_ime: str) -> str:
     normalizirano = NORMALIZACIJA_KLUBOV.get(oznaka)
 
     if normalizirano and normalizirano != klub_ime:
-        print(f"🔄 Klub spremenjen: '{klub_ime}' → '{normalizirano}'")
+        # print(f"🔄 Klub spremenjen: '{klub_ime}' → '{normalizirano}'")
         return normalizirano
     return klub_ime
 

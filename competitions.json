@@ -1,67 +1,43 @@
 [
   {
-    "info": "AH Snežnik - 2025",
-    "url": "https://www.ianseo.net/TourData/2025/22064/IC.php",
+    "info": "Ajdovščina 2023",
+    "url": "https://www.ianseo.net/TourData/2023/15953/IC.php",
+    "type": "Dvorana",
+    "season": "2023",
     "disabled": true,
-    "added_by": "simon",
-    "type": "AH",
-    "season": "2025"
+    "added_by": "simon"
   },
   {
-    "info": "AH Gornji Grad - 2025",
-    "url": "https://www.ianseo.net/TourData/2025/22787/IC.php",
+    "info": "Postojna 2023",
+    "url": "https://www.ianseo.net/TourData/2023/16108/IC.php",
+    "type": "Dvorana",
+    "season": "2023",
     "disabled": true,
-    "added_by": "simon",
-    "type": "AH",
-    "season": "2025"
+    "added_by": "simon"
   },
   {
-    "info": "AH Vrhnika - 2025",
-    "url": "https://www.ianseo.net/TourData/2025/23259/IC.php",
+    "info": "Šenčur 2023",
+    "url": "https://www.ianseo.net/TourData/2023/16291/IC.php",
+    "type": "Dvorana",
+    "season": "2023",
     "disabled": true,
-    "added_by": "simon",
-    "type": "AH",
-    "season": "2025"
+    "added_by": "simon"
   },
   {
-    "info": "3D Dolenjske toplice",
-    "url": "https://www.ianseo.net/TourData/2025/23136/IC.php",
+    "info": "Ilirska Bistrica 2023",
+    "url": "https://www.ianseo.net/TourData/2023/12772/IC.php",
+    "type": "Dvorana",
+    "season": "2023",
     "disabled": true,
-    "added_by": "simon",
-    "type": "3D",
-    "season": 2025
+    "added_by": "simon"
   },
   {
-    "info": "3D Šujica",
-    "url": "https://www.ianseo.net/TourData/2025/22406/IC.php",
+    "info": "Rakek 2023",
+    "url": "https://www.ianseo.net/TourData/2023/12803/IC.php",
+    "type": "Dvorana",
+    "season": "2023",
     "disabled": true,
-    "added_by": "simon",
-    "type": "3D",
-    "season": 2025
-  },
-  {
-    "info": "AH Boč - 2025",
-    "url": "https://www.ianseo.net/TourData/2025/23546/IC.php",
-    "disabled": true,
-    "added_by": "simon",
-    "type": "AH",
-    "season": "2025"
-  },
-  {
-    "info": "3D Lendava",
-    "url": "https://www.ianseo.net/TourData/2025/22168/IC.php",
-    "disabled": true,
-    "added_by": "simon",
-    "type": "3D",
-    "season": 2025
-  },
-  {
-    "info": "Maribor",
-    "url": "https://www.ianseo.net/TourData/2025/23141/IC.php",
-    "type": "Tarčno",
-    "disabled": true,
-    "added_by": "simon",
-    "season": 2025
+    "added_by": "simon"
   },
   {
     "info": "Ajdovščina 2024",
@@ -72,38 +48,6 @@
     "season": "2025"
   },
   {
-    "info": "3D Hmeljček",
-    "url": "https://www.ianseo.net/TourData/2025/23865/IC.php",
-    "type": "3D",
-    "disabled": true,
-    "added_by": "simon",
-    "season": 2025
-  },
-  {
-    "info": "AH Turjak - 2025",
-    "url": "https://www.ianseo.net/TourData/2025/24257/IC.php",
-    "type": "AH",
-    "disabled": true,
-    "added_by": "simon",
-    "season": "2025"
-  },
-  {
-    "info": "AH Gradac - 2025",
-    "url": "https://www.ianseo.net/TourData/2025/24894/IC.php",
-    "type": "AH",
-    "disabled": true,
-    "added_by": "simon",
-    "season": "2025"
-  },
-  {
-    "info": "3D Bohinjska Bela",
-    "url": "https://www.ianseo.net/TourData/2025/24576/IC.php",
-    "type": "3D",
-    "disabled": true,
-    "added_by": "simon",
-    "season": 2025
-  },
-    {
     "info": "Ajdovščina 2025",
     "url": "https://www.ianseo.net/TourData/2025/25409/IC.php",
     "type": "Dvorana",
@@ -144,16 +88,16 @@
     "season": "2026"
   },
   {
-    "info": "Rakek<br>25.1.2026",
-    "url": "https://www.ianseo.net/TourData/2026/1/IC.php",
+    "info": "Rakek 2026",
+    "url": "https://www.ianseo.net/TourData/2026/26417/IC.php",
     "type": "Dvorana",
     "disabled": false,
     "added_by": "simon",
     "season": "2026"
   },
   {
-    "info": "Šenčur<br>7.2.2026",
-    "url": "https://www.ianseo.net/TourData/2026/2/IC.php",
+    "info": "Šenčur 2026",
+    "url": "https://www.ianseo.net/TourData/2026/26590/IC.php",
     "type": "Dvorana",
     "disabled": false,
     "added_by": "simon",

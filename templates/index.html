@@ -175,6 +175,9 @@
         <button type="submit" class="button">📄 Razvrstitev društev 2025 (PDF) za {{ tip }}</button>
     </form>
 
+    <button class="button" onclick="runScraper()">🔄 Premelji za Luka</button>
+    <div id="message"></div>
+
 </div>
 {% endfor %}
 <hr>
@@ -214,6 +217,20 @@
     </p>
     {% endif %}
 <script>
+
+        function runScraper() {
+            fetch('/run-scraper')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('message').innerText = data.message;
+                })
+                .catch(error => {
+                    console.error('Napaka:', error);
+                    document.getElementById('message').innerText = 'Prišlo je do napake!';
+                });
+        }
+
+
   const toggleBtn = document.getElementById("toggleFormBtn");
   const formDiv = document.getElementById("addCompetitionForm");
 

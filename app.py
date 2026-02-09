@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, send_file, redirect, url_for, session, flash, make_response, \
-    send_from_directory
+    send_from_directory, jsonify
 import json
 import subprocess
 import scraper
@@ -463,10 +463,13 @@ def generate_pdf():
 
     # HTML footer
     footer_html = f"""
-    <div style="text-align: left; font-size: 10px; color: gray; margin-left: 10px;">
-        &#169; LZS - generirano: {current_date}
-    </div>
-    """
+        <div style="text-align: left; font-size: 12px; color: gray; margin-left: 10px;">
+            &#169; LZS - generirano: {current_date}
+        </div>
+        <div style="text-align: left; font-size: 10px; color: white; background-color: white; margin-left: 10px;">
+            by Simon
+        </div>
+        """
 
     # Render HTML template in pošlji v pdfkit za PDF generacijo
     rendered = render_template('report_klubi.html',
@@ -580,7 +583,14 @@ def generate_pdf_posamezno():
     # Footer
     # current_date = datetime.datetime.now().strftime("%d.%m.%Y")
     current_date = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
-    footer_html = f"""<div style="text-align: left; font-size: 12px; color: gray; margin-left: 10px;">&#169; LZS - generirano: {current_date}</div>"""
+    footer_html = f"""
+    <div style="text-align: left; font-size: 12px; color: gray; margin-left: 10px;">
+        &#169; LZS - generirano: {current_date}
+    </div>
+    <div style="text-align: left; font-size: 10px; color: white; background-color: white; margin-left: 10px;">
+        by Simon
+    </div>
+    """
     with tempfile.NamedTemporaryFile(delete=False, suffix=".html", mode="w", encoding="utf-8") as tmp_footer:
         tmp_footer.write(footer_html)
         footer_file_path = tmp_footer.name
@@ -617,6 +627,17 @@ def generate_pdf_posamezno():
     response.headers['Content-Disposition'] = f'attachment; filename={filename}'
     return response
 
+
+@app.route('/run-scraper', methods=['GET'])
+def run_scraper():
+    try:
+        # Zaženi skripto 'scraper.py' (prepričaj se, da je v isti mapi)
+        subprocess.run(['python', 'scraper-luka.py'], check=True)
+        return jsonify({'message': 'Scraper je bil uspešno zagnan!'}), 200
+    except subprocess.CalledProcessError as e:
+        return jsonify({'message': f'Prišlo je do napake pri izvajanju scraperja: {e}'}), 500
+    except Exception as e:
+        return jsonify({'message': f'Prišlo je do nepričakovane napake: {e}'}), 500
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
