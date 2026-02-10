@@ -213,6 +213,8 @@ def generiraj_povzetek_za_tip_final(izbran_tip):
 
     with open("rezultati_filtrirani.csv", encoding='utf-8-sig') as f:
         zacetne_kategorije = {}
+        # Nastavi Timoteja Obrezo Škrjanec v "Sestavljeni lok" in "Mlajši od 21 let"
+        # zacetne_kategorije["Obreza Škrjanec Timotej"] = ('Sestavljeni lok', 'Mlajši od 21 let')
         reader = csv.DictReader(f)
         for row in reader:
             tip = row['Tip'].strip()
@@ -237,6 +239,11 @@ def generiraj_povzetek_za_tip_final(izbran_tip):
             prejsnja_kategorija = zacetne_kategorije.get(tekmovalec)
 
             trenutna_kategorija = (slog, kategorija)
+
+            if tekmovalec == "Obreza Škerjanec Timotej":
+                if slog == "Ukrivljeni lok":
+                    print("--- Timotej preskočimo: " + slog)
+                    continue
 
             if prejsnja_kategorija is None:
                 zacetne_kategorije[tekmovalec] = trenutna_kategorija
