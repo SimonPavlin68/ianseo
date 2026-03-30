@@ -134,5 +134,93 @@
     "season": "2025",
     "disabled": true,
     "added_by": "simon"
+  },
+  {
+    "info": "Šujica 14.3.2026",
+    "url": "https://www.ianseo.net/TourData/2026/27164/IC.php",
+    "type": "3D",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Muta<br>11.4.2026",
+    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "type": "3D",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Vrhnika<br>19.4.2026",
+    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "type": "3D",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Kozarišče<br>3.5.2026",
+    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "type": "3D",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Turjak<br>27.6.2026",
+    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "type": "3D",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Mokrice<br>23.8.2026",
+    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "type": "3D",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Pongrac",
+    "url": "https://www.ianseo.net/TourData/2026/27233/IC.php",
+    "type": "AH",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Gradac<br>9.5.2026",
+    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "type": "AH",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Gornji Grad<br>13.6.2026",
+    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "type": "AH",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Boč<br>11.6.2026",
+    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "type": "AH",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Kozarišče<br>29.8.2026",
+    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "type": "AH",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
   }
 ]

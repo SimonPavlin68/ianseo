@@ -122,7 +122,7 @@ def index():
             type = request.form.get("type")
             season = request.form.get("season")
             if info and stevilo.isdigit():
-                url = f"https://www.ianseo.net/TourData/2025/{stevilo}/IC.php"
+                url = f"https://www.ianseo.net/TourData/{season}/{stevilo}/IC.php"
                 disabled = not bool(request.form.get("active"))  # Če kljukica ni obkljukana → disabled=True
                 dodaj_tekmo({"info": info, "url": url, "type": type, "season": season, "disabled": disabled})
                 return redirect(url_for("index"))
@@ -140,7 +140,7 @@ def index():
             new_type = request.form.get("type")
             new_season = request.form.get("season")
             new_id = request.form.get("id_tekmovanja")
-            new_url = f"https://www.ianseo.net/TourData/2025/{new_id}/IC.php"
+            new_url = f"https://www.ianseo.net/TourData/{new_season}/{new_id}/IC.php"
             disabled = not bool(request.form.get("active"))
             for tekma in tekme:
                 if tekma["info"] == old_info:
@@ -487,7 +487,7 @@ def generate_pdf():
 
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = f'attachment; filename=povzetek_{izbran_tab}.pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename={izbran_tab}_po_klubih.pdf'
     return response
 
 
@@ -622,7 +622,7 @@ def generate_pdf_posamezno():
 
     # Odgovor
     response = make_response(pdf)
-    filename = f"povzetek_posamezno_{izbran_tab}.pdf"
+    filename = f"{izbran_tab}_posamezno.pdf"
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = f'attachment; filename={filename}'
     return response

@@ -89,7 +89,7 @@ th, td {
           </td>
           <td style="color: red;">
             {% if '*' in tocke %}
-              <s>{{ tocke.strip('*') }}</s>
+              <s style="color: #888;">{{ tocke.strip('*') }}</s>
             {% else %}
               {{ tocke }}
             {% endif %}
