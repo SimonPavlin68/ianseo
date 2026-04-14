@@ -57,7 +57,7 @@ POKALSKI_NASLOVI = {
     "AH": "Slovenski Arrowhead pokal 2026",
     "3D": "Slovenski 3D pokal 2026",
     "Tarčno": "Slovenski tarčni pokal 2026",
-    "Dvorana": "Slovenski dvoranski pokal 2026"
+    "Dvorana": "Slovenski dvoranski pokal 2027"
 }
 
 # Branje vrednosti iz datoteke

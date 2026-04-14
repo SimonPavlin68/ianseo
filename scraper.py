@@ -99,7 +99,7 @@ def parse_competition_info(html_text):
     return ime_tekme, klub, lokacija, datum
 
 
-def parse_competition_results_old(url, allowed_categories, tip):
+def parse_competition_results_old123(url, allowed_categories, tip):
     resp = requests.get(url)
     resp.raise_for_status()
     html_text = resp.text
@@ -285,23 +285,30 @@ def parse_competition_results(url, allowed_categories, tip):
                         continue
 
                 klub_tekmovalca = normaliziraj_klub(klub_tekmovalca) or klub_tekmovalca
-                # print(klub_tekmovalca)
+                print(klub_tekmovalca)
                 # 4. Shrani rezultat, če gre za slovenski klub
-                if re.match(r"^\d{3} ", klub_tekmovalca):
-                    data.append({
-                        "Tekmovanje": ime_tekme or "Neznano tekmovanje",
-                        "Organizator": klub or "",
-                        "Lokacija": lokacija or "",
-                        "Datum": datum or "",
-                        "Kategorija": current_category,
-                        "Mesto": mesto,
-                        "Tekmovalec": tekmovalec,
-                        "Klub": klub_tekmovalca,
-                        "Rezultat": rezultat,
-                        "Tip": tip
-                    })
+                # if re.match(r"^\d{3} ", klub_tekmovalca):
+                match = re.match(r"^(\d{3}) ", klub_tekmovalca)
+
+                if match:
+                    klub_id = int(match.group(1))
+                    if klub_id <= 75:
+                        data.append({
+                            "Tekmovanje": ime_tekme or "Neznano tekmovanje",
+                            "Organizator": klub or "",
+                            "Lokacija": lokacija or "",
+                            "Datum": datum or "",
+                            "Kategorija": current_category,
+                            "Mesto": mesto,
+                            "Tekmovalec": tekmovalec,
+                            "Klub": klub_tekmovalca,
+                            "Rezultat": rezultat,
+                            "Tip": tip
+                        })
+                    else:
+                        print("⚠️ Tuji klub: " + klub_tekmovalca)
                 else:
-                    print("⚠️ Klub ni v LZS: " + klub_tekmovalca)
+                    print("⚠️ Napačen format kluba: " + klub_tekmovalca)
 
     print(f"✅ Najdenih rezultatov: {len(data)}")
     return data
