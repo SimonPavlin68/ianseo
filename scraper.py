@@ -292,7 +292,7 @@ def parse_competition_results(url, allowed_categories, tip):
 
                 if match:
                     klub_id = int(match.group(1))
-                    if klub_id <= 75:
+                    if klub_id <= 90:
                         data.append({
                             "Tekmovanje": ime_tekme or "Neznano tekmovanje",
                             "Organizator": klub or "",

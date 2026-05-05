@@ -8,11 +8,12 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/competitions.json" beforeDir="false" afterPath="$PROJECT_DIR$/competitions.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/normalizacija_klubov.csv" beforeDir="false" afterPath="$PROJECT_DIR$/normalizacija_klubov.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/popravki_imen.csv" beforeDir="false" afterPath="$PROJECT_DIR$/popravki_imen.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scraper.py" beforeDir="false" afterPath="$PROJECT_DIR$/scraper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tekme_3D.csv" beforeDir="false" afterPath="$PROJECT_DIR$/tekme_3D.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tekme_3D_not.json" beforeDir="false" afterPath="$PROJECT_DIR$/tekme_3D_not.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/udelezba_po_tekmovanjih.csv" beforeDir="false" afterPath="$PROJECT_DIR$/udelezba_po_tekmovanjih.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,32 +30,32 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "SimonPavlin68"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;SimonPavlin68&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/SimonPavlin68/ianseo.git",
-    "accountId": "ad17e218-93f7-426f-9783-fc308cf1c31f"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/SimonPavlin68/ianseo.git&quot;,
+    &quot;accountId&quot;: &quot;ad17e218-93f7-426f-9783-fc308cf1c31f&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="35ZcHbdHuKhGcYMKaMLZ7dcquq1" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.app.executor": "Run",
-    "git-widget-placeholder": "main"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\pavlin\github\ianseo" />
