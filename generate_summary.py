@@ -33,7 +33,7 @@ def extract_date_from_competition_name(name):
         try:
             return datetime.strptime(parts[1].strip(), "%d.%m.%Y")
         except ValueError:
-            print("--- exception ---")
+            print("--- exception: extract_date_from_competition_name---")
             pass
     return datetime.max  # če ni datuma, naj gre na konec
 
@@ -58,6 +58,8 @@ def generiraj_povzetek_za_tip(izbran_tip):
             if tip != izbran_tip:
                 continue  # preskoči rezultate, ki niso za izbran tip
             tekmovanje = f"{pogojni_capitalize(row['Lokacija'])}<br>{row['Datum']}"
+            print("!!! tekmovanje !!!")
+            print(tekmovanje)
             kategorija_polno = row['Kategorija'].strip()
             rezultat = int(row['Rezultat'])
 

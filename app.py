@@ -16,6 +16,7 @@ from utils import nalozi_normalizacijo_datoteko, nalozi_popravke_tekmovalcev_dat
 from utils import POKALSKI_NASLOVI
 import tempfile
 from datetime import datetime
+import unicodedata
 
 logging.basicConfig(filename='record.log', level=logging.DEBUG)
 
@@ -76,6 +77,7 @@ def preberi_povzetek_csv(path="povzetek.csv"):
 
         # Zadnja skupina, če ni prazne vrstice na koncu
         if ime_skupine and tabela:
+            print("------------- ime skupine: " + ime_skupine)
             skupine.append((ime_skupine, tabela))
 
     return skupine
@@ -376,6 +378,8 @@ def get_color_from_type(typ: str):
     elif typ == "Dvorana":
         # clr = "#b5b5ed"  # modra
         clr = "#A6C9E2"
+    elif typ == "Tarčno":
+        clr = "yellow"  # modra
     else:
         clr = "#aad18a"  # zelena
     return clr
@@ -486,8 +490,13 @@ def generate_pdf():
     # pdf = pdfkit.from_string(rendered, False)
 
     response = make_response(pdf)
+
+    safe_tab = unicodedata.normalize('NFKD', izbran_tab).encode('ascii', 'ignore').decode('ascii')
+    filename = f"{safe_tab}_po_klubih.pdf"
+
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = f'attachment; filename={izbran_tab}_po_klubih.pdf'
+
+    response.headers['Content-Disposition'] = f'attachment; filename={filename}'
     return response
 
 
@@ -614,6 +623,7 @@ def generate_pdf_posamezno():
     except Exception as e:
         os.remove(header_file_path)
         os.remove(footer_file_path)
+        print("--- Exception pri generiranju pdf ---")
         return f"Napaka pri generiranju PDF: {e}"
 
     # Čiščenje začasnih datotek
@@ -622,7 +632,9 @@ def generate_pdf_posamezno():
 
     # Odgovor
     response = make_response(pdf)
-    filename = f"{izbran_tab}_posamezno.pdf"
+    # filename = f"{izbran_tab}_posamezno.pdf"
+    safe_tab = unicodedata.normalize('NFKD', izbran_tab).encode('ascii', 'ignore').decode('ascii')
+    filename = f"{safe_tab}_posamezno.pdf"
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = f'attachment; filename={filename}'
     return response
@@ -671,5 +683,5 @@ def favicon():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=7777)
-    # app.run(debug=True, port=7777, host='0.0.0.0')
+    # app.run(debug=True, port=7777)
+    app.run(debug=True, port=7777, host='0.0.0.0')

@@ -7,11 +7,10 @@
     <list default="true" id="c24c91a2-1266-46bf-9619-eda486b445af" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/categories.json" beforeDir="false" afterPath="$PROJECT_DIR$/categories.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/competitions.json" beforeDir="false" afterPath="$PROJECT_DIR$/competitions.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/normalizacija_klubov.csv" beforeDir="false" afterPath="$PROJECT_DIR$/normalizacija_klubov.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/popravki_imen.csv" beforeDir="false" afterPath="$PROJECT_DIR$/popravki_imen.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generate_summary.py" beforeDir="false" afterPath="$PROJECT_DIR$/generate_summary.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scraper.py" beforeDir="false" afterPath="$PROJECT_DIR$/scraper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tekme_3D.csv" beforeDir="false" afterPath="$PROJECT_DIR$/tekme_3D.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tekme_3D_not.json" beforeDir="false" afterPath="$PROJECT_DIR$/tekme_3D_not.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/udelezba_po_tekmovanjih.csv" beforeDir="false" afterPath="$PROJECT_DIR$/udelezba_po_tekmovanjih.csv" afterDir="false" />
     </list>

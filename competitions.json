@@ -4,7 +4,7 @@
     "url": "https://www.ianseo.net/TourData/2026/27164/IC.php",
     "type": "3D",
     "season": "2026",
-    "disabled": false,
+    "disabled": true,
     "added_by": "simon"
   },
   {
@@ -12,7 +12,7 @@
     "url": "https://www.ianseo.net/TourData/2026/27615/IC.php",
     "type": "3D",
     "season": "2026",
-    "disabled": false,
+    "disabled": true,
     "added_by": "simon"
   },
   {
@@ -20,7 +20,7 @@
     "url": "https://www.ianseo.net/TourData/2026/27664/IC.php",
     "type": "3D",
     "season": "2026",
-    "disabled": false,
+    "disabled": true,
     "added_by": "simon"
   },
   {
@@ -28,7 +28,7 @@
     "url": "https://www.ianseo.net/TourData/2026/27734/IC.php",
     "type": "3D",
     "season": "2026",
-    "disabled": false,
+    "disabled": true,
     "added_by": "simon"
   },
   {
@@ -36,7 +36,7 @@
     "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
     "type": "3D",
     "season": "2026",
-    "disabled": false,
+    "disabled": true,
     "added_by": "simon"
   },
   {
@@ -52,15 +52,15 @@
     "url": "https://www.ianseo.net/TourData/2026/27233/IC.php",
     "type": "AH",
     "season": "2026",
-    "disabled": false,
+    "disabled": true,
     "added_by": "simon"
   },
   {
-    "info": "Gradac<br>9.5.2026",
-    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "info": "Gradac 9.5.2026",
+    "url": "https://www.ianseo.net/TourData/2026/28017/IC.php",
     "type": "AH",
     "season": "2026",
-    "disabled": false,
+    "disabled": true,
     "added_by": "simon"
   },
   {
@@ -88,8 +88,32 @@
     "added_by": "simon"
   },
   {
-    "info": "lendava",
+    "info": "Lendava",
     "url": "https://www.ianseo.net/TourData/2026/27831/IC.php",
+    "type": "Tarčno",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Šenčur <br>16.5.2026",
+    "url": "https://www.ianseo.net/TourData/2026/28288/IC.php",
+    "type": "Tarčno",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Maribor <br>20.6.2026",
+    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
+    "type": "Tarčno",
+    "season": "2026",
+    "disabled": false,
+    "added_by": "simon"
+  },
+  {
+    "info": "Logatec <br>22.8.2026",
+    "url": "https://www.ianseo.net/TourData/2026/0/IC.php",
     "type": "Tarčno",
     "season": "2026",
     "disabled": false,
