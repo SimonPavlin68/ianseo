@@ -26,6 +26,16 @@ def popravi_ime(ime, popravki):
         return capitalize_ime(popravki_ci[ime_upper])
     return capitalize_ime(ime)
 
+def popravi_kategorijo(ime, kategorija, tekmovanje):
+    if tekmovanje == "Lendava<br>26.4.2026":
+        ime_upper = ime.strip().upper()
+        if ime_upper == "KARIDI VERONIKA":
+            print("--- pička ---")
+            if kategorija == "Goli lok - Mlajše od 18 let":
+                print("--- materina ---")
+                return True
+    return False
+
 
 def extract_date_from_competition_name(name):
     parts = name.split("<br>")
@@ -58,8 +68,6 @@ def generiraj_povzetek_za_tip(izbran_tip):
             if tip != izbran_tip:
                 continue  # preskoči rezultate, ki niso za izbran tip
             tekmovanje = f"{pogojni_capitalize(row['Lokacija'])}<br>{row['Datum']}"
-            print("!!! tekmovanje !!!")
-            print(tekmovanje)
             kategorija_polno = row['Kategorija'].strip()
             rezultat = int(row['Rezultat'])
 
@@ -71,6 +79,9 @@ def generiraj_povzetek_za_tip(izbran_tip):
 
             tekmovalec_raw = row['Tekmovalec'].strip()
             tekmovalec = popravi_ime(tekmovalec_raw, popravki_imen)
+            if popravi_kategorijo(tekmovalec_raw, kategorija_polno, tekmovanje):
+                print("------------ Jebemomater pa tale Karidi!!!")
+                continue
             klub_raw = row['Klub'].strip()
             klub = normaliziraj_klub(klub_raw)
             all_competitions.add(tekmovanje)
